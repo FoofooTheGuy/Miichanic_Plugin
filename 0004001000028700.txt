@@ -1,0 +1,18 @@
+[editor data]
+0880CC04 00000003
+
+[mii dsta]
+08831C84 00000003
+
+[blessed]
+08848E84 00000003
+
+[selected mii]
+18AF7398 00010009
+
+[editpr!]
+0803CAEC FFFFFFFF
+
+[is vieeing miis]
+08AF73A4 00B88C50
+
