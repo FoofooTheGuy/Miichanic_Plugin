@@ -50,3 +50,13 @@ Delete Mii
 Useless OSD
 
 Toggle theme
+# Screenshots:
+Dark theme (default) and Light theme (ugly)
+
+![first](https://user-images.githubusercontent.com/32585652/117500955-39548c80-af32-11eb-9475-a1c4fe72d9cd.png)
+![second](https://user-images.githubusercontent.com/32585652/117501040-61dc8680-af32-11eb-8665-d03606a2f9ac.png)
+
+Mega menu:
+
+![third](https://user-images.githubusercontent.com/32585652/117501182-8f293480-af32-11eb-9f87-b00b4ba6b9d3.png)
+![fourth](https://user-images.githubusercontent.com/32585652/117501188-93555200-af32-11eb-87f3-a70f143657bf.png)
