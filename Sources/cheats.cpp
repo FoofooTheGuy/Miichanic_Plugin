@@ -346,7 +346,20 @@ bool ReadNibble(u32 address, u8 &value, bool right_side) {
 		SaveFile.Inject(0x14895A20, 0x4BD20);
 		MessageBox("Save restored!")();
 	}
-
+	
+	#define red 0xD21E14FF
+	#define orange 0xFF6E19
+	#define yellow 0xFFD820
+	#define lime 0x78D220
+	#define green 0x007830
+	#define blue 0x204898
+	#define cyan 0x3CAADE
+	#define pink 0xF55A7D
+	#define purple 0x7328AD
+	#define brown 0x483818
+	#define white 0xE0E0E0
+	#define black 0x181814
+	
 	std::vector<std::string> megOpt{
 		"Change name...",
 		"Change creator...",
@@ -378,22 +391,24 @@ bool ReadNibble(u32 address, u8 &value, bool right_side) {
 	};
 	
 	std::vector<std::string> colOpt{
-		"Red",
-		"Orange",
-		"Yellow",
-		"Lime",
-		"Green",
-		"Blue",
-		"Cyan",
-		"Pink",
-		"Purple",
-		"Brown",
-		"White",
-		"Black",
+		"\uE017 Red \uE017",
+		"\uE017 Orange \uE017",
+		"\uE017 Yellow \uE017",
+		"\uE017 Lime \uE017",
+		"\uE017 Green \uE017",
+		"\uE017 Blue \uE017",
+		"\uE017 Cyan \uE017",
+		"\uE017 Pink \uE017",
+		"\uE017 Purple \uE017",
+		"\uE017 Brown \uE017",
+		"\uE017 White \uE017",
+		"\uE017 Black \uE017",
 	};
 	
 	void megamenu(MenuEntry *entry)
 	{
+		std::vector<std::string> colorOpt;
+		static int ColChoice = 0;
 		std::string name;
 		std::string create;
 		std::string finame;
@@ -520,11 +535,25 @@ bool ReadNibble(u32 address, u8 &value, bool right_side) {
 					}
 				break;
 			case 3://color (shares space with favorite)
+			{
 			Sleep(Milliseconds(100));
-					coloptKb->Populate(colOpt);
-					switch (coloptKb->Open())
+			colorOpt.push_back(Color(0xD21E14FF) << colOpt[0]);//red
+			colorOpt.push_back(Color(0xFF6E19FF) << colOpt[1]);//orange
+			colorOpt.push_back(Color(0xFFD820FF) << colOpt[2]);//yellow
+			colorOpt.push_back(Color(0x78D220FF) << colOpt[3]);//lime
+			colorOpt.push_back(Color(0x007830FF) << colOpt[4]);//green
+			colorOpt.push_back(Color(0x204898FF) << colOpt[5]);//blue
+			colorOpt.push_back(Color(0x3CAADEFF) << colOpt[6]);//cyan
+			colorOpt.push_back(Color(0xF55A7DFF) << colOpt[7]);//pink
+			colorOpt.push_back(Color(0x7328ADFF) << colOpt[8]);//purple
+			colorOpt.push_back(Color(0x483818FF) << colOpt[9]);//brown
+			colorOpt.push_back(Color(0xE0E0E0FF) << colOpt[10]);//white
+			colorOpt.push_back(Color(0x181814FF) << colOpt[11]);//black
+			
+			        Keyboard    keyboard("Pick a new color:", colorOpt);
+					ColChoice = keyboard.Open();
+					if (ColChoice == 0)//red
 					{
-					case 0://red
 						if (Process::Read8((0x17200 * val) + (0x883A9FC), check) && check == 0)//if its already red
 						{
 						Sleep(Milliseconds(100));
@@ -561,8 +590,9 @@ bool ReadNibble(u32 address, u8 &value, bool right_side) {
 							Sleep(Milliseconds(100));
 							MessageBox("The shirt is now red!\n(Reload and save to make changes)")();
 						}
-						break;
-					case 1://orange
+					}
+					if (ColChoice == 1)//orange
+					{
 						if (Process::Read8((0x17200 * val) + (0x883A9FC), check) && check == 0x1)
 						{
 						Sleep(Milliseconds(100));
@@ -599,8 +629,9 @@ bool ReadNibble(u32 address, u8 &value, bool right_side) {
 							Sleep(Milliseconds(100));
 							MessageBox("The shirt is now orange!\n(Reload and save to make changes)")();
 						}
-						break;
-					case 2://yellow
+					}
+					if (ColChoice == 2)//yellow
+					{
 						if (Process::Read8((0x17200 * val) + (0x883A9FC), check) && check == 0x2)
 						{
 						Sleep(Milliseconds(100));
@@ -637,8 +668,9 @@ bool ReadNibble(u32 address, u8 &value, bool right_side) {
 							Sleep(Milliseconds(100));
 							MessageBox("The shirt is now yellow!\n(Reload and save to make changes)")();
 						}
-						break;
-					case 3://lime
+					}
+					if (ColChoice == 3)//lime
+					{
 						if (Process::Read8((0x17200 * val) + (0x883A9FC), check) && check == 0x3)
 						{
 						Sleep(Milliseconds(100));
@@ -675,8 +707,9 @@ bool ReadNibble(u32 address, u8 &value, bool right_side) {
 							Sleep(Milliseconds(100));
 							MessageBox("The shirt is now lime!\n(Reload and save to make changes)")();
 						}
-						break;
-					case 4://green
+					}
+					if (ColChoice == 4)//green
+					{
 						if (Process::Read8((0x17200 * val) + (0x883A9FC), check) && check == 0x4)
 						{
 						Sleep(Milliseconds(100));
@@ -713,8 +746,9 @@ bool ReadNibble(u32 address, u8 &value, bool right_side) {
 							Sleep(Milliseconds(100));
 							MessageBox("The shirt is now green!\n(Reload and save to make changes)")();
 						}
-						break;
-					case 5://blue
+					}
+					if (ColChoice == 5)//blue
+					{
 						if (Process::Read8((0x17200 * val) + (0x883A9FC), check) && check == 0x5)
 						{
 						Sleep(Milliseconds(100));
@@ -751,8 +785,9 @@ bool ReadNibble(u32 address, u8 &value, bool right_side) {
 							Sleep(Milliseconds(100));
 							MessageBox("The shirt is now blue!\n(Reload and save to make changes)")();
 						}
-						break;
-					case 6://cyan
+					}
+					if (ColChoice == 6)//cyan
+					{
 						if (Process::Read8((0x17200 * val) + (0x883A9FC), check) && check == 0x6)
 						{
 						Sleep(Milliseconds(100));
@@ -789,8 +824,9 @@ bool ReadNibble(u32 address, u8 &value, bool right_side) {
 							Sleep(Milliseconds(100));
 							MessageBox("The shirt is now cyan!\n(Reload and save to make changes)")();
 						}
-						break;
-					case 7://pink
+					}
+					if (ColChoice == 7)//pink
+					{
 						if (Process::Read8((0x17200 * val) + (0x883A9FC), check) && check == 0x7)
 						{
 						Sleep(Milliseconds(100));
@@ -827,8 +863,9 @@ bool ReadNibble(u32 address, u8 &value, bool right_side) {
 							Sleep(Milliseconds(100));
 							MessageBox("The shirt is now pink!\n(Reload and save to make changes)")();
 						}
-						break;
-					case 8://purple
+					}
+					if (ColChoice == 8)//purple
+					{
 						if (Process::Read8((0x17200 * val) + (0x883A9FC), check) && check == 0x8)
 						{
 						Sleep(Milliseconds(100));
@@ -865,8 +902,9 @@ bool ReadNibble(u32 address, u8 &value, bool right_side) {
 							Sleep(Milliseconds(100));
 							MessageBox("The shirt is now purple!\n(Reload and save to make changes)")();
 						}
-						break;
-					case 9://brown
+					}
+					if (ColChoice == 9)//brown
+					{
 						if (Process::Read8((0x17200 * val) + (0x883A9FC), check) && check == 0x9)
 						{
 						Sleep(Milliseconds(100));
@@ -903,8 +941,9 @@ bool ReadNibble(u32 address, u8 &value, bool right_side) {
 							Sleep(Milliseconds(100));
 							MessageBox("The shirt is now brown!\n(Reload and save to make changes)")();
 						}
-						break;
-					case 10://white
+					}
+					if (ColChoice == 10)//white
+					{
 						if (Process::Read8((0x17200 * val) + (0x883A9FC), check) && check == 0xA)
 						{
 						Sleep(Milliseconds(100));
@@ -941,8 +980,9 @@ bool ReadNibble(u32 address, u8 &value, bool right_side) {
 							Sleep(Milliseconds(100));
 							MessageBox("The shirt is now white!\n(Reload and save to make changes)")();
 						}
-						break;
-					case 11://black
+					}
+					if (ColChoice == 11)//black
+					{
 						if (Process::Read8((0x17200 * val) + (0x883A9FC), check) && check == 0xB)
 						{
 						Sleep(Milliseconds(100));
@@ -979,9 +1019,9 @@ bool ReadNibble(u32 address, u8 &value, bool right_side) {
 							Sleep(Milliseconds(100));
 							MessageBox("The shirt is now black!\n(Reload and save to make changes)")();
 						}
-						break;
 					}
 				break;
+			}
 			case 4://favorite
 			Sleep(Milliseconds(100));
 				optKb->Populate(ableOpt);
