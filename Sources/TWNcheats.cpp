@@ -322,22 +322,24 @@ bool TWNReadNibble(u32 address, u8 &value, bool right_side) {
 	};
 	
 	std::vector<std::string> TWNcolOpt{
-		"Red",
-		"Orange",
-		"Yellow",
-		"Lime",
-		"Green",
-		"Blue",
-		"Cyan",
-		"Pink",
-		"Purple",
-		"Brown",
-		"White",
-		"Black",
+		"\uE017 Red \uE017",
+		"\uE017 Orange \uE017",
+		"\uE017 Yellow \uE017",
+		"\uE017 Lime \uE017",
+		"\uE017 Green \uE017",
+		"\uE017 Blue \uE017",
+		"\uE017 Cyan \uE017",
+		"\uE017 Pink \uE017",
+		"\uE017 Purple \uE017",
+		"\uE017 Brown \uE017",
+		"\uE017 White \uE017",
+		"\uE017 Black \uE017",
 	};
 	
 	void TWNmegamenu(MenuEntry *entry)
 	{
+		std::vector<std::string> TWNcolorOpt;
+		static int TWNColChoice = 0;
 		std::string name;
 		std::string create;
 		std::string finame;
@@ -464,11 +466,25 @@ bool TWNReadNibble(u32 address, u8 &value, bool right_side) {
 					}
 				break;
 			case 3://color (shares space with favorite) done
+			{
 			Sleep(Milliseconds(100));
-					TWNcoloptKb->Populate(TWNcolOpt);
-					switch (TWNcoloptKb->Open())
+			TWNcolorOpt.push_back(Color(0xD21E14FF) << TWNcolOpt[0]);//red
+			TWNcolorOpt.push_back(Color(0xFF6E19FF) << TWNcolOpt[1]);//orange
+			TWNcolorOpt.push_back(Color(0xFFD820FF) << TWNcolOpt[2]);//yellow
+			TWNcolorOpt.push_back(Color(0x78D220FF) << TWNcolOpt[3]);//lime
+			TWNcolorOpt.push_back(Color(0x007830FF) << TWNcolOpt[4]);//green
+			TWNcolorOpt.push_back(Color(0x204898FF) << TWNcolOpt[5]);//blue
+			TWNcolorOpt.push_back(Color(0x3CAADEFF) << TWNcolOpt[6]);//cyan
+			TWNcolorOpt.push_back(Color(0xF55A7DFF) << TWNcolOpt[7]);//pink
+			TWNcolorOpt.push_back(Color(0x7328ADFF) << TWNcolOpt[8]);//purple
+			TWNcolorOpt.push_back(Color(0x483818FF) << TWNcolOpt[9]);//brown
+			TWNcolorOpt.push_back(Color(0xE0E0E0FF) << TWNcolOpt[10]);//white
+			TWNcolorOpt.push_back(Color(0x181814FF) << TWNcolOpt[11]);//black
+			
+			        Keyboard    keyboard("Pick a new color:", TWNcolorOpt);
+					TWNColChoice = keyboard.Open();
+					if (TWNColChoice == 0)//red
 					{
-					case 0://red done
 						if (Process::Read8((0x17200 * val) + (0x8831D70), check) && check == 0)//if its already red
 						{
 						Sleep(Milliseconds(100));
@@ -505,8 +521,9 @@ bool TWNReadNibble(u32 address, u8 &value, bool right_side) {
 							Sleep(Milliseconds(100));
 							MessageBox("The shirt is now red!\n(Reload and save to make changes)")();
 						}
-						break;
-					case 1://orange done
+					}
+					if (TWNColChoice == 1)//orange
+					{
 						if (Process::Read8((0x17200 * val) + (0x8831D70), check) && check == 0x1)
 						{
 						Sleep(Milliseconds(100));
@@ -543,8 +560,9 @@ bool TWNReadNibble(u32 address, u8 &value, bool right_side) {
 							Sleep(Milliseconds(100));
 							MessageBox("The shirt is now orange!\n(Reload and save to make changes)")();
 						}
-						break;
-					case 2://yellow done
+					}
+					if (TWNColChoice == 2)//yellow
+					{
 						if (Process::Read8((0x17200 * val) + (0x8831D70), check) && check == 0x2)
 						{
 						Sleep(Milliseconds(100));
@@ -581,8 +599,9 @@ bool TWNReadNibble(u32 address, u8 &value, bool right_side) {
 							Sleep(Milliseconds(100));
 							MessageBox("The shirt is now yellow!\n(Reload and save to make changes)")();
 						}
-						break;
-					case 3://lime done
+					}
+					if (TWNColChoice == 3)//lime
+					{
 						if (Process::Read8((0x17200 * val) + (0x8831D70), check) && check == 0x3)
 						{
 						Sleep(Milliseconds(100));
@@ -619,8 +638,9 @@ bool TWNReadNibble(u32 address, u8 &value, bool right_side) {
 							Sleep(Milliseconds(100));
 							MessageBox("The shirt is now lime!\n(Reload and save to make changes)")();
 						}
-						break;
-					case 4://green done
+					}
+					if (TWNColChoice == 4)//green
+					{
 						if (Process::Read8((0x17200 * val) + (0x8831D70), check) && check == 0x4)
 						{
 						Sleep(Milliseconds(100));
@@ -657,8 +677,9 @@ bool TWNReadNibble(u32 address, u8 &value, bool right_side) {
 							Sleep(Milliseconds(100));
 							MessageBox("The shirt is now green!\n(Reload and save to make changes)")();
 						}
-						break;
-					case 5://blue done
+					}
+					if (TWNColChoice == 5)//blue
+					{
 						if (Process::Read8((0x17200 * val) + (0x8831D70), check) && check == 0x5)
 						{
 						Sleep(Milliseconds(100));
@@ -695,8 +716,9 @@ bool TWNReadNibble(u32 address, u8 &value, bool right_side) {
 							Sleep(Milliseconds(100));
 							MessageBox("The shirt is now blue!\n(Reload and save to make changes)")();
 						}
-						break;
-					case 6://cyan done
+					}
+					if (TWNColChoice == 6)//cyan
+					{
 						if (Process::Read8((0x17200 * val) + (0x8831D70), check) && check == 0x6)
 						{
 						Sleep(Milliseconds(100));
@@ -733,8 +755,9 @@ bool TWNReadNibble(u32 address, u8 &value, bool right_side) {
 							Sleep(Milliseconds(100));
 							MessageBox("The shirt is now cyan!\n(Reload and save to make changes)")();
 						}
-						break;
-					case 7://pink done
+					}
+					if (TWNColChoice == 7)//pink
+					{
 						if (Process::Read8((0x17200 * val) + (0x8831D70), check) && check == 0x7)
 						{
 						Sleep(Milliseconds(100));
@@ -771,8 +794,9 @@ bool TWNReadNibble(u32 address, u8 &value, bool right_side) {
 							Sleep(Milliseconds(100));
 							MessageBox("The shirt is now pink!\n(Reload and save to make changes)")();
 						}
-						break;
-					case 8://purple done
+					}
+					if (TWNColChoice == 8)//purple
+					{
 						if (Process::Read8((0x17200 * val) + (0x8831D70), check) && check == 0x8)
 						{
 						Sleep(Milliseconds(100));
@@ -809,8 +833,9 @@ bool TWNReadNibble(u32 address, u8 &value, bool right_side) {
 							Sleep(Milliseconds(100));
 							MessageBox("The shirt is now purple!\n(Reload and save to make changes)")();
 						}
-						break;
-					case 9://brown done
+					}
+					if (TWNColChoice == 9)//brown
+					{
 						if (Process::Read8((0x17200 * val) + (0x8831D70), check) && check == 0x9)
 						{
 						Sleep(Milliseconds(100));
@@ -847,8 +872,9 @@ bool TWNReadNibble(u32 address, u8 &value, bool right_side) {
 							Sleep(Milliseconds(100));
 							MessageBox("The shirt is now brown!\n(Reload and save to make changes)")();
 						}
-						break;
-					case 10://white done
+					}
+					if (TWNColChoice == 10)//white
+					{
 						if (Process::Read8((0x17200 * val) + (0x8831D70), check) && check == 0xA)
 						{
 						Sleep(Milliseconds(100));
@@ -885,8 +911,9 @@ bool TWNReadNibble(u32 address, u8 &value, bool right_side) {
 							Sleep(Milliseconds(100));
 							MessageBox("The shirt is now white!\n(Reload and save to make changes)")();
 						}
-						break;
-					case 11://black done
+					}
+					if (TWNColChoice == 11)//black
+					{
 						if (Process::Read8((0x17200 * val) + (0x8831D70), check) && check == 0xB)
 						{
 						Sleep(Milliseconds(100));
@@ -923,9 +950,9 @@ bool TWNReadNibble(u32 address, u8 &value, bool right_side) {
 							Sleep(Milliseconds(100));
 							MessageBox("The shirt is now black!\n(Reload and save to make changes)")();
 						}
-						break;
 					}
 				break;
+			}
 			case 4://favorite done
 			Sleep(Milliseconds(100));
 				TWNoptKb->Populate(TWNableOpt);
