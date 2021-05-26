@@ -106,7 +106,7 @@ exit:
 	{
 		if (Process::GetTitleID() == 0x0004001000020700 || Process::GetTitleID() == 0x0004001000021700 || Process::GetTitleID() == 0x0004001000022700)
 		{
-			PluginMenu *menu = new PluginMenu("Miichanic's Tool Box (JP/US/EU)", 0, 4, 5, "A set of cheats for 3DS Mii Maker made by Foofoo\n\nyoutube.com/c/foofooanimations");
+			PluginMenu *menu = new PluginMenu("Miichanic's Tool Box (JP/US/EU)", 0, 4, 6, "A set of cheats for 3DS Mii Maker made by Foofoo\n\nyoutube.com/c/foofooanimations");
 			menu->SynchronizeWithFrame(true);
 			
 			const std::vector<MenuEntry *> JPUSEUeditorEntries{
@@ -131,7 +131,7 @@ exit:
 		}
 		if (Process::GetTitleID() == 0x0004001000028700 || Process::GetTitleID() == 0x0004001000026700 || Process::GetTitleID() == 0x0004001000027700)
 		{
-			PluginMenu *menu = new PluginMenu("Miichanic's Tool Box (TWN/CHN/KOR?)", 0, 4, 5, "A set of cheats for 3DS Mii Studio made by Foofoo\n\nyoutube.com/c/foofooanimations");
+			PluginMenu *menu = new PluginMenu("Miichanic's Tool Box (TWN/CHN/KOR?)", 0, 4, 6, "A set of cheats for 3DS Mii Studio made by Foofoo\n\nyoutube.com/c/foofooanimations");
 			menu->SynchronizeWithFrame(true);
 			
 			const std::vector<MenuEntry *> TWNeditorEntries{
