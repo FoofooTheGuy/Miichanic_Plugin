@@ -1,4 +1,7 @@
 #include "cheats.hpp"
+#include <ostream>
+#include <string>
+#include <vector>
 
 namespace CTRPluginFramework
 {
@@ -6,7 +9,7 @@ namespace CTRPluginFramework
 	Keyboard *coloptKb = new Keyboard("Choose option:\n(This clears the birth day because of how confusing that is, deal with it.)");
 	Keyboard *deloptKb = new Keyboard("Are you sure you want to delete this Mii?");
 
-bool WriteNibble(u32 address, u8 value, bool right_side) {
+bool WriteNibble(u32 address, u8 value, bool right_side) {//ty lukas!!!!
   if(!Process::CheckAddress(address)) //checks if address is valid
     return false;
 //right side of the byte
@@ -32,6 +35,24 @@ bool ReadNibble(u32 address, u8 &value, bool right_side) {
 //left side of the byte    
   value = (*(u8 *)(address) >> 4) & 0xF;
   return true;
+}
+
+std::vector<size_t> GetSubstrIndexList(std::string &str, std::string indexOf)
+{
+   std::vector<size_t> IndexList;
+
+   for (size_t i = 0; i < str.size(); i++)
+   {
+      if (str.substr(i, indexOf.size()) == indexOf)
+         IndexList.push_back(i);
+   }
+
+   return IndexList;
+}
+
+void ReplaceSTR(std::string &str, const std::string &oldSTR, const std::string &newSTR, int substrIndex)
+{
+    str.replace(str.begin() + substrIndex, (str.begin() + substrIndex) + oldSTR.size(), newSTR);
 }
 
 	void savetheme(MenuEntry *entry) {
@@ -111,13 +132,29 @@ bool ReadNibble(u32 address, u8 &value, bool right_side) {
 		Process::Write16(0x8815958, 0);
 		OSD::Notify("Nickname changed!");
 		Process::ReadString(0x8815944, wrote, 0x20, StringFormat::Utf16);
-        if (strstr(wrote.c_str(), "%")) {
-            Process::WriteString(0x8815944, "??????????", StringFormat::Utf16);
-			OSD::Notify("Unsavable characters detected (%), fixed.");
+		if (strstr(wrote.c_str(), "%")) {
+		std::string toSearch("%");
+		std::vector<size_t> IndexVec = GetSubstrIndexList(wrote, toSearch);
+		if (IndexVec.size())
+		{
+			for (size_t i = 0; i < IndexVec.size(); i++) {
+				ReplaceSTR(wrote, toSearch, "?", IndexVec.at(i));
+			}
+			Process::WriteString(0x8815944, wrote, StringFormat::Utf16);
+			MessageBox("Invalid characters detected (%), fixed.")();
+		}
 		}
 		if (strstr(wrote.c_str(), "\\")) {
-            Process::WriteString(0x8815944, "??????????", StringFormat::Utf16);
-			OSD::Notify("Unsavable characters detected (\\), fixed.");
+		std::string toSearch("\\");
+		std::vector<size_t> IndexVec = GetSubstrIndexList(wrote, toSearch);
+		if (IndexVec.size())
+		{
+			for (size_t i = 0; i < IndexVec.size(); i++) {
+				ReplaceSTR(wrote, toSearch, "?", IndexVec.at(i));
+			}
+			Process::WriteString(0x8815944, wrote, StringFormat::Utf16);
+			MessageBox("Invalid characters detected (\\), fixed.")();
+		}
 		}
 		}
 		else if (Process::Read32(0x88B2B28, val) && val != 0xFFFFFFFF) {
@@ -134,14 +171,30 @@ bool ReadNibble(u32 address, u8 &value, bool right_side) {
 		Process::WriteString(0x881595A, textvalue, StringFormat::Utf16);
 		Process::Write16(0x881596E, 0);
 		OSD::Notify("Creator name changed!");
-				Process::ReadString(0x881595A, wrote, 0x20, StringFormat::Utf16);
-        if (strstr(wrote.c_str(), "%")) {
-            Process::WriteString(0x881595A, "??????????", StringFormat::Utf16);
-			OSD::Notify("Unsavable characters detected (%), fixed.");
+		Process::ReadString(0x881595A, wrote, 0x20, StringFormat::Utf16);
+		if (strstr(wrote.c_str(), "%")) {
+		std::string toSearch("%");
+		std::vector<size_t> IndexVec = GetSubstrIndexList(wrote, toSearch);
+		if (IndexVec.size())
+		{
+			for (size_t i = 0; i < IndexVec.size(); i++) {
+				ReplaceSTR(wrote, toSearch, "?", IndexVec.at(i));
+			}
+			Process::WriteString(0x881595A, wrote, StringFormat::Utf16);
+			MessageBox("Invalid characters detected (%), fixed.")();
+		}
 		}
 		if (strstr(wrote.c_str(), "\\")) {
-            Process::WriteString(0x881595A, "??????????", StringFormat::Utf16);
-			OSD::Notify("Unsavable characters detected (\\), fixed.");
+		std::string toSearch("\\");
+		std::vector<size_t> IndexVec = GetSubstrIndexList(wrote, toSearch);
+		if (IndexVec.size())
+		{
+			for (size_t i = 0; i < IndexVec.size(); i++) {
+				ReplaceSTR(wrote, toSearch, "?", IndexVec.at(i));
+			}
+			Process::WriteString(0x881595A, wrote, StringFormat::Utf16);
+			MessageBox("Invalid characters detected (\\), fixed.")();
+		}
 		}
 		}
 		else if (Process::Read32(0x88B2B28, val) && val != 0xFFFFFFFF) {
@@ -347,6 +400,17 @@ bool ReadNibble(u32 address, u8 &value, bool right_side) {
 		MessageBox("Save restored!")();
 	}
 	
+	void exitgame(MenuEntry *entry) {
+		if ((MessageBox("Are you sure you want to close the app?\nYou may lose unsaved data.", DialogType::DialogYesNo)).SetClear(ClearScreen::Both)())
+		{
+			if ((MessageBox("Mii Maker will now close.", DialogType::DialogOkCancel)).SetClear(ClearScreen::Both)())
+			{
+				Process::ReturnToHomeMenu();
+			}
+			else return;
+		}
+		else return;
+	}
 	#define red 0xD21E14FF
 	#define orange 0xFF6E19
 	#define yellow 0xFFD820
@@ -412,7 +476,7 @@ bool ReadNibble(u32 address, u8 &value, bool right_side) {
 		std::string name;
 		std::string create;
 		std::string finame;
-		std::string fifiname;
+		//std::string fifiname;
 		u32 pers;
 		u32 reg;
 		u32 sysID;
@@ -450,20 +514,35 @@ bool ReadNibble(u32 address, u8 &value, bool right_side) {
 				Process::WriteString((0x5C * val) + (0x14895A20 + 0x22), name, StringFormat::Utf16);
 				if (Process::ReadString((0x5C * val) + (0x14895A20 + 0x22), finame, 20, StringFormat::Utf16)) {
 				if (strstr(finame.c_str(), "%")) {
-				Process::WriteString((0x5C * val) + (0x14895A20 + 0x22), "??????????", StringFormat::Utf16);
-				Sleep(Milliseconds(100));
-				MessageBox("Invalid characters detected (%), fixed.")();
+				std::string toSearch("%");
+				std::vector<size_t> IndexVec = GetSubstrIndexList(finame, toSearch);
+				if (IndexVec.size())
+				{
+					for (size_t i = 0; i < IndexVec.size(); i++) {
+						ReplaceSTR(finame, toSearch, "?", IndexVec.at(i));
+					}
+					Process::WriteString((0x5C * val) + (0x14895A20 + 0x22), finame, StringFormat::Utf16);
+					Sleep(Milliseconds(100));
+					MessageBox("Invalid characters detected (%), fixed.")();
+				}
 				}
 				if (strstr(finame.c_str(), "\\")) {
-				Process::WriteString((0x5C * val) + (0x14895A20 + 0x22), "??????????", StringFormat::Utf16);
-				Sleep(Milliseconds(100));
-				MessageBox("Invalid characters detected (\\), fixed.")();
+				std::string toSearch("\\");
+				std::vector<size_t> IndexVec = GetSubstrIndexList(finame, toSearch);
+				if (IndexVec.size())
+				{
+					for (size_t i = 0; i < IndexVec.size(); i++) {
+						ReplaceSTR(finame, toSearch, "?", IndexVec.at(i));
+					}
+					Process::WriteString((0x5C * val) + (0x14895A20 + 0x22), finame, StringFormat::Utf16);
+					Sleep(Milliseconds(100));
+					MessageBox("Invalid characters detected (\\), fixed.")();
+				}
 				}
 				Sleep(Milliseconds(100));
 				Process::Write16((0x5C * val) + 0x14895A56, fix);
-				if(Process::ReadString((0x5C * val) + (0x14895A20 + 0x22), fifiname, 20, StringFormat::Utf16)) {
-				MessageBox("Name changed to \u0022" + fifiname + "\u0022!\n(Reload and save to make changes)")();
-				}
+				//if(Process::ReadString((0x5C * val) + (0x14895A20 + 0x22), fifiname, 20, StringFormat::Utf16)) {
+				MessageBox("Name changed to \u0022" + finame + "\u0022\n(Reload and save to make changes)")();
 				}
 			}
 				break;
@@ -482,20 +561,35 @@ bool ReadNibble(u32 address, u8 &value, bool right_side) {
 				Process::WriteString((0x5C * val) + (0x14895A20 + 0x50), create, StringFormat::Utf16);
 				if (Process::ReadString((0x5C * val) + (0x14895A20 + 0x50), finame, 20, StringFormat::Utf16)) {
 				if (strstr(finame.c_str(), "%")) {
-				Process::WriteString((0x5C * val) + (0x14895A20 + 0x50), "??????????", StringFormat::Utf16);
-				Sleep(Milliseconds(100));
-				MessageBox("Invalid characters detected (%), fixed.")();
+				std::string toSearch("%");
+				std::vector<size_t> IndexVec = GetSubstrIndexList(finame, toSearch);
+				if (IndexVec.size())
+				{
+					for (size_t i = 0; i < IndexVec.size(); i++) {
+						ReplaceSTR(finame, toSearch, "?", IndexVec.at(i));
+					}
+					Process::WriteString((0x5C * val) + (0x14895A20 + 0x50), finame, StringFormat::Utf16);
+					Sleep(Milliseconds(100));
+					MessageBox("Invalid characters detected (%), fixed.")();
+				}
 				}
 				if (strstr(finame.c_str(), "\\")) {
-				Process::WriteString((0x5C * val) + (0x14895A20 + 0x50), "??????????", StringFormat::Utf16);
-				Sleep(Milliseconds(100));
-				MessageBox("Invalid characters detected (\\), fixed.")();
+				std::string toSearch("\\");
+				std::vector<size_t> IndexVec = GetSubstrIndexList(finame, toSearch);
+				if (IndexVec.size())
+				{
+					for (size_t i = 0; i < IndexVec.size(); i++) {
+						ReplaceSTR(finame, toSearch, "?", IndexVec.at(i));
+					}
+					Process::WriteString((0x5C * val) + (0x14895A20 + 0x50), finame, StringFormat::Utf16);
+					Sleep(Milliseconds(100));
+					MessageBox("Invalid characters detected (\\), fixed.")();
+				}
 				}
 				Sleep(Milliseconds(100));
 				Process::Write16((0x5C * val) + 0x14895A84, fix);
-				if(Process::ReadString((0x5C * val) + (0x14895A20 + 0x50), fifiname, 20, StringFormat::Utf16)) {
-				MessageBox("Creator name changed to \u0022" + fifiname + "\u0022!\n(Reload and save to make changes)")();
-				}
+				//if(Process::ReadString((0x5C * val) + (0x14895A20 + 0x50), fifiname, 20, StringFormat::Utf16)) {
+				MessageBox("Creator name changed to \u0022" + finame + "\u0022\n(Reload and save to make changes)")();
 				}
 			}
 				break;
