@@ -16,6 +16,7 @@ namespace CTRPluginFramework
 	void dumpsave(MenuEntry *entry);
 	void restoresave(MenuEntry *entry);
 	void megamenu(MenuEntry *entry);
+	void exitgame(MenuEntry *entry);
 	//TWN
 	void TWNnamedit(MenuEntry *entry);
 	void TWNOSD(MenuEntry *entry);
