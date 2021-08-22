@@ -1,5 +1,5 @@
 # Miichanic_Plugin
-A Luma3DS plugin for the Title Mii Maker that uses CTRPF 0.7.0 and supports every region. (Korea hasn't been tested yet so that may not be functional)
+A Luma3DS plugin for the Title Mii Maker that uses CTRPF 0.7.0 and supports almost every region. (Korea coming soon)
 
 # Features:
 
