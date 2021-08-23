@@ -411,19 +411,35 @@ void ReplaceSTR(std::string &str, const std::string &oldSTR, const std::string &
 		}
 		else return;
 	}
-	#define red 0xD21E14FF
-	#define orange 0xFF6E19
-	#define yellow 0xFFD820
-	#define lime 0x78D220
-	#define green 0x007830
-	#define blue 0x204898
-	#define cyan 0x3CAADE
-	#define pink 0xF55A7D
-	#define purple 0x7328AD
-	#define brown 0x483818
-	#define white 0xE0E0E0
-	#define black 0x181814
-	
+
+	std::string colorcolor(int pick) {
+		if (pick == 0)
+			return "red";
+		else if (pick == 1)
+			return "orange";
+		else if (pick == 2)
+			return "yellow";
+		else if (pick == 3)
+			return "lime";
+		else if (pick == 4)
+			return "green";
+		else if (pick == 5)
+			return "blue";
+		else if (pick == 6)
+			return "cyan";
+		else if (pick == 7)
+			return "pink";
+		else if (pick == 8)
+			return "purple";
+		else if (pick == 9)
+			return "brown";
+		else if (pick == 10)
+			return "white";
+		else if (pick == 11)
+			return "black";
+		else return "";
+	}
+
 	std::vector<std::string> megOpt{
 		"Change name...",
 		"Change creator...",
@@ -631,27 +647,28 @@ void ReplaceSTR(std::string &str, const std::string &oldSTR, const std::string &
 			case 3://color (shares space with favorite)
 			{
 			Sleep(Milliseconds(100));
-			colorOpt.push_back(Color(0xD21E14FF) << colOpt[0]);//red
-			colorOpt.push_back(Color(0xFF6E19FF) << colOpt[1]);//orange
-			colorOpt.push_back(Color(0xFFD820FF) << colOpt[2]);//yellow
-			colorOpt.push_back(Color(0x78D220FF) << colOpt[3]);//lime
-			colorOpt.push_back(Color(0x007830FF) << colOpt[4]);//green
-			colorOpt.push_back(Color(0x204898FF) << colOpt[5]);//blue
-			colorOpt.push_back(Color(0x3CAADEFF) << colOpt[6]);//cyan
-			colorOpt.push_back(Color(0xF55A7DFF) << colOpt[7]);//pink
-			colorOpt.push_back(Color(0x7328ADFF) << colOpt[8]);//purple
-			colorOpt.push_back(Color(0x483818FF) << colOpt[9]);//brown
-			colorOpt.push_back(Color(0xE0E0E0FF) << colOpt[10]);//white
-			colorOpt.push_back(Color(0x181814FF) << colOpt[11]);//black
+			colorOpt.push_back(Color(red) << colOpt[0]);
+			colorOpt.push_back(Color(orange) << colOpt[1]);
+			colorOpt.push_back(Color(yellow) << colOpt[2]);
+			colorOpt.push_back(Color(lime) << colOpt[3]);
+			colorOpt.push_back(Color(green) << colOpt[4]);
+			colorOpt.push_back(Color(blue) << colOpt[5]);
+			colorOpt.push_back(Color(cyan) << colOpt[6]);
+			colorOpt.push_back(Color(pink) << colOpt[7]);
+			colorOpt.push_back(Color(purple) << colOpt[8]);
+			colorOpt.push_back(Color(brown) << colOpt[9]);
+			colorOpt.push_back(Color(white) << colOpt[10]);
+			colorOpt.push_back(Color(black) << colOpt[11]);
 			
 			        Keyboard    keyboard("Pick a new color:", colorOpt);
 					ColChoice = keyboard.Open();
-					if (ColChoice == 0)//red
+					if (ColChoice != -1)
 					{
-						if (Process::Read8((0x17200 * val) + (0x883A9FC), check) && check == 0)//if its already red
+						std::string picked = colorcolor(ColChoice);
+						if (Process::Read8((0x17200 * val) + (0x883A9FC), check) && check == ColChoice)//if its already the color you pick
 						{
 						Sleep(Milliseconds(100));
-						MessageBox("The shirt is already red!")();
+						MessageBox("The shirt is already " << picked << "!")();
 						}
 						else
 						{
@@ -665,11 +682,11 @@ void ReplaceSTR(std::string &str, const std::string &oldSTR, const std::string &
 								Process::Write8((0x17200 * val) + (0x883A9F0), 1);
 							}
 							Process::Read8((0x5C * val) + (0x14895A41), color);
-							Process::Write8((0x5C * val) + (0x14895A41), color + 0);//write red value
+							Process::Write8((0x5C * val) + (0x14895A41), color + (4 * ColChoice));//write color value
 							Process::Read8((0x5C * val) + (0x14895A41), fav);
 							Process::Write8((0x5C * val) + (0x14895A41), (fav + 0x40));//make it favorite again
 							}
-							else if(check == 0) {
+							else if(check == 0) {//if its not favorite
 								Process::Read8((0x17200 * val) + (0x883A9F0), gen);
 								Process::Write16((0x5C * val) + (0x14895A40), 0);
 								if(gen == 0x1) {
@@ -678,440 +695,11 @@ void ReplaceSTR(std::string &str, const std::string &oldSTR, const std::string &
 									Process::Write8((0x17200 * val) + (0x883A9F0), 1);
 								}
 								Process::Read8((0x5C * val) + (0x14895A41), color);
-								Process::Write8((0x5C * val) + (0x14895A41), color + 0);//just make it red
+								Process::Write8((0x5C * val) + (0x14895A41), color + (4 * ColChoice));//just make it the color
 							}
-							Process::Write8((0x17200 * val) + (0x883A9FC), 0);//adjust internal
+							Process::Write8((0x17200 * val) + (0x883A9FC), ColChoice);//adjust internal
 							Sleep(Milliseconds(100));
-							MessageBox("The shirt is now red!\n(Reload and save to make changes)")();
-						}
-					}
-					if (ColChoice == 1)//orange
-					{
-						if (Process::Read8((0x17200 * val) + (0x883A9FC), check) && check == 0x1)
-						{
-						Sleep(Milliseconds(100));
-						MessageBox("The shirt is already orange!")();
-						}
-						else
-						{
-							if (Process::Read8((0x17200 * val) + (0x883AA00), check) && check == 0x1)
-							{
-							Process::Read8((0x17200 * val) + (0x883A9F0), gen);
-							Process::Write16((0x5C * val) + (0x14895A40), 0);
-							if(gen == 0x1) {
-								Process::Read8((0x5C * val) + (0x14895A40), gen);
-								Process::Write8((0x5C * val) + (0x14895A40), (gen + 1));
-								Process::Write8((0x17200 * val) + (0x883A9F0), 1);
-							}
-							Process::Read8((0x5C * val) + (0x14895A41), color);
-							Process::Write8((0x5C * val) + (0x14895A41), color + 0x4);
-							Process::Read8((0x5C * val) + (0x14895A41), fav);
-							Process::Write8((0x5C * val) + (0x14895A41), (fav + 0x40));
-							}
-							else if(check == 0) {
-								Process::Read8((0x17200 * val) + (0x883A9F0), gen);
-								Process::Write16((0x5C * val) + (0x14895A40), 0);
-								if(gen == 0x1) {
-									Process::Read8((0x5C * val) + (0x14895A40), gen);
-									Process::Write8((0x5C * val) + (0x14895A40), (gen + 1));
-									Process::Write8((0x17200 * val) + (0x883A9F0), 1);
-								}
-								Process::Read8((0x5C * val) + (0x14895A41), color);
-								Process::Write8((0x5C * val) + (0x14895A41), color + 0x4);
-							}
-							Process::Write8((0x17200 * val) + (0x883A9FC), 0x1);
-							Sleep(Milliseconds(100));
-							MessageBox("The shirt is now orange!\n(Reload and save to make changes)")();
-						}
-					}
-					if (ColChoice == 2)//yellow
-					{
-						if (Process::Read8((0x17200 * val) + (0x883A9FC), check) && check == 0x2)
-						{
-						Sleep(Milliseconds(100));
-						MessageBox("The shirt is already yellow!")();
-						}
-						else
-						{
-							if (Process::Read8((0x17200 * val) + (0x883AA00), check) && check == 0x1)
-							{
-							Process::Read8((0x17200 * val) + (0x883A9F0), gen);
-							Process::Write16((0x5C * val) + (0x14895A40), 0);
-							if(gen == 0x1) {
-								Process::Read8((0x5C * val) + (0x14895A40), gen);
-								Process::Write8((0x5C * val) + (0x14895A40), (gen + 1));
-								Process::Write8((0x17200 * val) + (0x883A9F0), 1);
-							}
-							Process::Read8((0x5C * val) + (0x14895A41), color);
-							Process::Write8((0x5C * val) + (0x14895A41), color + 0x8);
-							Process::Read8((0x5C * val) + (0x14895A41), fav);
-							Process::Write8((0x5C * val) + (0x14895A41), (fav + 0x40));
-							}
-							else if(check == 0) {
-								Process::Read8((0x17200 * val) + (0x883A9F0), gen);
-								Process::Write16((0x5C * val) + (0x14895A40), 0);
-								if(gen == 0x1) {
-									Process::Read8((0x5C * val) + (0x14895A40), gen);
-									Process::Write8((0x5C * val) + (0x14895A40), (gen + 1));
-									Process::Write8((0x17200 * val) + (0x883A9F0), 1);
-								}
-								Process::Read8((0x5C * val) + (0x14895A41), color);
-								Process::Write8((0x5C * val) + (0x14895A41), color + 0x8);
-							}
-							Process::Write8((0x17200 * val) + (0x883A9FC), 0x2);
-							Sleep(Milliseconds(100));
-							MessageBox("The shirt is now yellow!\n(Reload and save to make changes)")();
-						}
-					}
-					if (ColChoice == 3)//lime
-					{
-						if (Process::Read8((0x17200 * val) + (0x883A9FC), check) && check == 0x3)
-						{
-						Sleep(Milliseconds(100));
-						MessageBox("The shirt is already lime!")();
-						}
-						else
-						{
-							if (Process::Read8((0x17200 * val) + (0x883AA00), check) && check == 0x1)
-							{
-							Process::Read8((0x17200 * val) + (0x883A9F0), gen);
-							Process::Write16((0x5C * val) + (0x14895A40), 0);
-							if(gen == 0x1) {
-								Process::Read8((0x5C * val) + (0x14895A40), gen);
-								Process::Write8((0x5C * val) + (0x14895A40), (gen + 1));
-								Process::Write8((0x17200 * val) + (0x883A9F0), 1);
-							}
-							Process::Read8((0x5C * val) + (0x14895A41), color);
-							Process::Write8((0x5C * val) + (0x14895A41), color + 0xC);
-							Process::Read8((0x5C * val) + (0x14895A41), fav);
-							Process::Write8((0x5C * val) + (0x14895A41), (fav + 0x40));
-							}
-							else if(check == 0) {
-								Process::Read8((0x17200 * val) + (0x883A9F0), gen);
-								Process::Write16((0x5C * val) + (0x14895A40), 0);
-								if(gen == 0x1) {
-									Process::Read8((0x5C * val) + (0x14895A40), gen);
-									Process::Write8((0x5C * val) + (0x14895A40), (gen + 1));
-									Process::Write8((0x17200 * val) + (0x883A9F0), 1);
-								}
-								Process::Read8((0x5C * val) + (0x14895A41), color);
-								Process::Write8((0x5C * val) + (0x14895A41), color + 0xC);
-							}
-							Process::Write8((0x17200 * val) + (0x883A9FC), 0x3);
-							Sleep(Milliseconds(100));
-							MessageBox("The shirt is now lime!\n(Reload and save to make changes)")();
-						}
-					}
-					if (ColChoice == 4)//green
-					{
-						if (Process::Read8((0x17200 * val) + (0x883A9FC), check) && check == 0x4)
-						{
-						Sleep(Milliseconds(100));
-						MessageBox("The shirt is already green!")();
-						}
-						else
-						{
-							if (Process::Read8((0x17200 * val) + (0x883AA00), check) && check == 0x1)
-							{
-							Process::Read8((0x17200 * val) + (0x883A9F0), gen);
-							Process::Write16((0x5C * val) + (0x14895A40), 0);
-							if(gen == 0x1) {
-								Process::Read8((0x5C * val) + (0x14895A40), gen);
-								Process::Write8((0x5C * val) + (0x14895A40), (gen + 1));
-								Process::Write8((0x17200 * val) + (0x883A9F0), 1);
-							}
-							Process::Read8((0x5C * val) + (0x14895A41), color);
-							Process::Write8((0x5C * val) + (0x14895A41), color + 0x10);
-							Process::Read8((0x5C * val) + (0x14895A41), fav);
-							Process::Write8((0x5C * val) + (0x14895A41), (fav + 0x40));
-							}
-							else if(check == 0) {
-								Process::Read8((0x17200 * val) + (0x883A9F0), gen);
-								Process::Write16((0x5C * val) + (0x14895A40), 0);
-								if(gen == 0x1) {
-									Process::Read8((0x5C * val) + (0x14895A40), gen);
-									Process::Write8((0x5C * val) + (0x14895A40), (gen + 1));
-									Process::Write8((0x17200 * val) + (0x883A9F0), 1);
-								}
-								Process::Read8((0x5C * val) + (0x14895A41), color);
-								Process::Write8((0x5C * val) + (0x14895A41), color + 0x10);
-							}
-							Process::Write8((0x17200 * val) + (0x883A9FC), 0x4);
-							Sleep(Milliseconds(100));
-							MessageBox("The shirt is now green!\n(Reload and save to make changes)")();
-						}
-					}
-					if (ColChoice == 5)//blue
-					{
-						if (Process::Read8((0x17200 * val) + (0x883A9FC), check) && check == 0x5)
-						{
-						Sleep(Milliseconds(100));
-						MessageBox("The shirt is already blue!")();
-						}
-						else
-						{
-							if (Process::Read8((0x17200 * val) + (0x883AA00), check) && check == 0x1)
-							{
-							Process::Read8((0x17200 * val) + (0x883A9F0), gen);
-							Process::Write16((0x5C * val) + (0x14895A40), 0);
-							if(gen == 0x1) {
-								Process::Read8((0x5C * val) + (0x14895A40), gen);
-								Process::Write8((0x5C * val) + (0x14895A40), (gen + 1));
-								Process::Write8((0x17200 * val) + (0x883A9F0), 1);
-							}
-							Process::Read8((0x5C * val) + (0x14895A41), color);
-							Process::Write8((0x5C * val) + (0x14895A41), color + 0x14);
-							Process::Read8((0x5C * val) + (0x14895A41), fav);
-							Process::Write8((0x5C * val) + (0x14895A41), (fav + 0x40));
-							}
-							else if(check == 0) {
-								Process::Read8((0x17200 * val) + (0x883A9F0), gen);
-								Process::Write16((0x5C * val) + (0x14895A40), 0);
-								if(gen == 0x1) {
-									Process::Read8((0x5C * val) + (0x14895A40), gen);
-									Process::Write8((0x5C * val) + (0x14895A40), (gen + 1));
-									Process::Write8((0x17200 * val) + (0x883A9F0), 1);
-								}
-								Process::Read8((0x5C * val) + (0x14895A41), color);
-								Process::Write8((0x5C * val) + (0x14895A41), color + 0x14);
-							}
-							Process::Write8((0x17200 * val) + (0x883A9FC), 0x5);
-							Sleep(Milliseconds(100));
-							MessageBox("The shirt is now blue!\n(Reload and save to make changes)")();
-						}
-					}
-					if (ColChoice == 6)//cyan
-					{
-						if (Process::Read8((0x17200 * val) + (0x883A9FC), check) && check == 0x6)
-						{
-						Sleep(Milliseconds(100));
-						MessageBox("The shirt is already cyan!")();
-						}
-						else
-						{
-							if (Process::Read8((0x17200 * val) + (0x883AA00), check) && check == 0x1)
-							{
-							Process::Read8((0x17200 * val) + (0x883A9F0), gen);
-							Process::Write16((0x5C * val) + (0x14895A40), 0);
-							if(gen == 0x1) {
-								Process::Read8((0x5C * val) + (0x14895A40), gen);
-								Process::Write8((0x5C * val) + (0x14895A40), (gen + 1));
-								Process::Write8((0x17200 * val) + (0x883A9F0), 1);
-							}
-							Process::Read8((0x5C * val) + (0x14895A41), color);
-							Process::Write8((0x5C * val) + (0x14895A41), color + 0x18);
-							Process::Read8((0x5C * val) + (0x14895A41), fav);
-							Process::Write8((0x5C * val) + (0x14895A41), (fav + 0x40));
-							}
-							else if(check == 0) {
-								Process::Read8((0x17200 * val) + (0x883A9F0), gen);
-								Process::Write16((0x5C * val) + (0x14895A40), 0);
-								if(gen == 0x1) {
-									Process::Read8((0x5C * val) + (0x14895A40), gen);
-									Process::Write8((0x5C * val) + (0x14895A40), (gen + 1));
-									Process::Write8((0x17200 * val) + (0x883A9F0), 1);
-								}
-								Process::Read8((0x5C * val) + (0x14895A41), color);
-								Process::Write8((0x5C * val) + (0x14895A41), color + 0x18);
-							}
-							Process::Write8((0x17200 * val) + (0x883A9FC), 0x6);
-							Sleep(Milliseconds(100));
-							MessageBox("The shirt is now cyan!\n(Reload and save to make changes)")();
-						}
-					}
-					if (ColChoice == 7)//pink
-					{
-						if (Process::Read8((0x17200 * val) + (0x883A9FC), check) && check == 0x7)
-						{
-						Sleep(Milliseconds(100));
-						MessageBox("The shirt is already pink!")();
-						}
-						else
-						{
-							if (Process::Read8((0x17200 * val) + (0x883AA00), check) && check == 0x1)
-							{
-							Process::Read8((0x17200 * val) + (0x883A9F0), gen);
-							Process::Write16((0x5C * val) + (0x14895A40), 0);
-							if(gen == 0x1) {
-								Process::Read8((0x5C * val) + (0x14895A40), gen);
-								Process::Write8((0x5C * val) + (0x14895A40), (gen + 1));
-								Process::Write8((0x17200 * val) + (0x883A9F0), 1);
-							}
-							Process::Read8((0x5C * val) + (0x14895A41), color);
-							Process::Write8((0x5C * val) + (0x14895A41), color + 0x1C);
-							Process::Read8((0x5C * val) + (0x14895A41), fav);
-							Process::Write8((0x5C * val) + (0x14895A41), (fav + 0x40));
-							}
-							else if(check == 0) {
-								Process::Read8((0x17200 * val) + (0x883A9F0), gen);
-								Process::Write16((0x5C * val) + (0x14895A40), 0);
-								if(gen == 0x1) {
-									Process::Read8((0x5C * val) + (0x14895A40), gen);
-									Process::Write8((0x5C * val) + (0x14895A40), (gen + 1));
-									Process::Write8((0x17200 * val) + (0x883A9F0), 1);
-								}
-								Process::Read8((0x5C * val) + (0x14895A41), color);
-								Process::Write8((0x5C * val) + (0x14895A41), color + 0x1C);
-							}
-							Process::Write8((0x17200 * val) + (0x883A9FC), 0x7);
-							Sleep(Milliseconds(100));
-							MessageBox("The shirt is now pink!\n(Reload and save to make changes)")();
-						}
-					}
-					if (ColChoice == 8)//purple
-					{
-						if (Process::Read8((0x17200 * val) + (0x883A9FC), check) && check == 0x8)
-						{
-						Sleep(Milliseconds(100));
-						MessageBox("The shirt is already purple!")();
-						}
-						else
-						{
-							if (Process::Read8((0x17200 * val) + (0x883AA00), check) && check == 0x1)
-							{
-							Process::Read8((0x17200 * val) + (0x883A9F0), gen);
-							Process::Write16((0x5C * val) + (0x14895A40), 0);
-							if(gen == 0x1) {
-								Process::Read8((0x5C * val) + (0x14895A40), gen);
-								Process::Write8((0x5C * val) + (0x14895A40), (gen + 1));
-								Process::Write8((0x17200 * val) + (0x883A9F0), 1);
-							}
-							Process::Read8((0x5C * val) + (0x14895A41), color);
-							Process::Write8((0x5C * val) + (0x14895A41), color + 0x20);
-							Process::Read8((0x5C * val) + (0x14895A41), fav);
-							Process::Write8((0x5C * val) + (0x14895A41), (fav + 0x40));
-							}
-							else if(check == 0) {
-								Process::Read8((0x17200 * val) + (0x883A9F0), gen);
-								Process::Write16((0x5C * val) + (0x14895A40), 0);
-								if(gen == 0x1) {
-									Process::Read8((0x5C * val) + (0x14895A40), gen);
-									Process::Write8((0x5C * val) + (0x14895A40), (gen + 1));
-									Process::Write8((0x17200 * val) + (0x883A9F0), 1);
-								}
-								Process::Read8((0x5C * val) + (0x14895A41), color);
-								Process::Write8((0x5C * val) + (0x14895A41), color + 0x20);
-							}
-							Process::Write8((0x17200 * val) + (0x883A9FC), 0x8);
-							Sleep(Milliseconds(100));
-							MessageBox("The shirt is now purple!\n(Reload and save to make changes)")();
-						}
-					}
-					if (ColChoice == 9)//brown
-					{
-						if (Process::Read8((0x17200 * val) + (0x883A9FC), check) && check == 0x9)
-						{
-						Sleep(Milliseconds(100));
-						MessageBox("The shirt is already brown!")();
-						}
-						else
-						{
-							if (Process::Read8((0x17200 * val) + (0x883AA00), check) && check == 0x1)
-							{
-							Process::Read8((0x17200 * val) + (0x883A9F0), gen);
-							Process::Write16((0x5C * val) + (0x14895A40), 0);
-							if(gen == 0x1) {
-								Process::Read8((0x5C * val) + (0x14895A40), gen);
-								Process::Write8((0x5C * val) + (0x14895A40), (gen + 1));
-								Process::Write8((0x17200 * val) + (0x883A9F0), 1);
-							}
-							Process::Read8((0x5C * val) + (0x14895A41), color);
-							Process::Write8((0x5C * val) + (0x14895A41), color + 0x24);
-							Process::Read8((0x5C * val) + (0x14895A41), fav);
-							Process::Write8((0x5C * val) + (0x14895A41), (fav + 0x40));
-							}
-							else if(check == 0) {
-								Process::Read8((0x17200 * val) + (0x883A9F0), gen);
-								Process::Write16((0x5C * val) + (0x14895A40), 0);
-								if(gen == 0x1) {
-									Process::Read8((0x5C * val) + (0x14895A40), gen);
-									Process::Write8((0x5C * val) + (0x14895A40), (gen + 1));
-									Process::Write8((0x17200 * val) + (0x883A9F0), 1);
-								}
-								Process::Read8((0x5C * val) + (0x14895A41), color);
-								Process::Write8((0x5C * val) + (0x14895A41), color + 0x24);
-							}
-							Process::Write8((0x17200 * val) + (0x883A9FC), 0x9);
-							Sleep(Milliseconds(100));
-							MessageBox("The shirt is now brown!\n(Reload and save to make changes)")();
-						}
-					}
-					if (ColChoice == 10)//white
-					{
-						if (Process::Read8((0x17200 * val) + (0x883A9FC), check) && check == 0xA)
-						{
-						Sleep(Milliseconds(100));
-						MessageBox("The shirt is already white!")();
-						}
-						else
-						{
-							if (Process::Read8((0x17200 * val) + (0x883AA00), check) && check == 0x1)
-							{
-							Process::Read8((0x17200 * val) + (0x883A9F0), gen);
-							Process::Write16((0x5C * val) + (0x14895A40), 0);
-							if(gen == 0x1) {
-								Process::Read8((0x5C * val) + (0x14895A40), gen);
-								Process::Write8((0x5C * val) + (0x14895A40), (gen + 1));
-								Process::Write8((0x17200 * val) + (0x883A9F0), 1);
-							}
-							Process::Read8((0x5C * val) + (0x14895A41), color);
-							Process::Write8((0x5C * val) + (0x14895A41), color + 0x28);
-							Process::Read8((0x5C * val) + (0x14895A41), fav);
-							Process::Write8((0x5C * val) + (0x14895A41), (fav + 0x40));
-							}
-							else if(check == 0) {
-								Process::Read8((0x17200 * val) + (0x883A9F0), gen);
-								Process::Write16((0x5C * val) + (0x14895A40), 0);
-								if(gen == 0x1) {
-									Process::Read8((0x5C * val) + (0x14895A40), gen);
-									Process::Write8((0x5C * val) + (0x14895A40), (gen + 1));
-									Process::Write8((0x17200 * val) + (0x883A9F0), 1);
-								}
-								Process::Read8((0x5C * val) + (0x14895A41), color);
-								Process::Write8((0x5C * val) + (0x14895A41), color + 0x28);
-							}
-							Process::Write8((0x17200 * val) + (0x883A9FC), 0xA);
-							Sleep(Milliseconds(100));
-							MessageBox("The shirt is now white!\n(Reload and save to make changes)")();
-						}
-					}
-					if (ColChoice == 11)//black
-					{
-						if (Process::Read8((0x17200 * val) + (0x883A9FC), check) && check == 0xB)
-						{
-						Sleep(Milliseconds(100));
-						MessageBox("The shirt is already black!")();
-						}
-						else
-						{
-							if (Process::Read8((0x17200 * val) + (0x883AA00), check) && check == 0x1)
-							{
-							Process::Read8((0x17200 * val) + (0x883A9F0), gen);
-							Process::Write16((0x5C * val) + (0x14895A40), 0);
-							if(gen == 0x1) {
-								Process::Read8((0x5C * val) + (0x14895A40), gen);
-								Process::Write8((0x5C * val) + (0x14895A40), (gen + 1));
-								Process::Write8((0x17200 * val) + (0x883A9F0), 1);
-							}
-							Process::Read8((0x5C * val) + (0x14895A41), color);
-							Process::Write8((0x5C * val) + (0x14895A41), color + 0x2C);
-							Process::Read8((0x5C * val) + (0x14895A41), fav);
-							Process::Write8((0x5C * val) + (0x14895A41), (fav + 0x40));
-							}
-							else if(check == 0) {
-								Process::Read8((0x17200 * val) + (0x883A9F0), gen);
-								Process::Write16((0x5C * val) + (0x14895A40), 0);
-								if(gen == 0x1) {
-									Process::Read8((0x5C * val) + (0x14895A40), gen);
-									Process::Write8((0x5C * val) + (0x14895A40), (gen + 1));
-									Process::Write8((0x17200 * val) + (0x883A9F0), 1);
-								}
-								Process::Read8((0x5C * val) + (0x14895A41), color);
-								Process::Write8((0x5C * val) + (0x14895A41), color + 0x2C);
-							}
-							Process::Write8((0x17200 * val) + (0x883A9FC), 0xB);
-							Sleep(Milliseconds(100));
-							MessageBox("The shirt is now black!\n(Reload and save to make changes)")();
+							MessageBox("The shirt is now " << picked << "!\n(Reload and save to make changes)")();
 						}
 					}
 				break;
