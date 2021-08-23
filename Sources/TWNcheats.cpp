@@ -6,34 +6,6 @@ namespace CTRPluginFramework
 	Keyboard *TWNcoloptKb = new Keyboard("Choose option:\n(This clears the birth day because of how confusing that is, deal with it.)");
 	Keyboard *TWNdeloptKb = new Keyboard("Are you sure you want to delete this Mii?");
 
-bool TWNWriteNibble(u32 address, u8 value, bool right_side) {
-  if(!Process::CheckAddress(address)) //checks if address is valid
-    return false;
-//right side of the byte
-  if(right_side) {
-    *(u8 *)address &= ~0xF; //Clears 4bit first
-    *(u8 *)address |= (value & 0xF); //Write 4bit then
-    return true;
-  }
-//left side of the byte
-  *(u8 *)address &= ~(0xF << 4); //Clears 4bit first
-  *(u8 *)address |= ((value & 0xF) << 4); //Write 4bit then
-  return true;
-}
-
-bool TWNReadNibble(u32 address, u8 &value, bool right_side) {
-  if(!Process::CheckAddress(address)) //checks if address is valid
-    return false;
-//right side of the byte
-  if(right_side) {
-    value = *(u8 *)(address) & 0xF;
-    return true;
-  }
-//left side of the byte    
-  value = (*(u8 *)(address) >> 4) & 0xF;
-  return true;
-}
-
 	std::vector<std::string> TWNNameEdit
 	{
 		"Nickname",
@@ -58,18 +30,32 @@ bool TWNReadNibble(u32 address, u8 &value, bool right_side) {
 		Process::Write16(0x880CCCC, 0);
 		OSD::Notify("Nickname changed!");
 		Process::ReadString(0x880CCB8, wrote, 0x20, StringFormat::Utf16);
-        if (strstr(wrote.c_str(), "%")) {
-            Process::WriteString(0x880CCB8, "??????????", StringFormat::Utf16);
-			OSD::Notify("Unsavable characters detected (%), fixed.");
+		if (strstr(wrote.c_str(), "%")) {
+		std::string toSearch("%");
+		std::vector<size_t> IndexVec = GetSubstrIndexList(wrote, toSearch);
+		if (IndexVec.size())
+		{
+			for (size_t i = 0; i < IndexVec.size(); i++) {
+				ReplaceSTR(wrote, toSearch, "?", IndexVec.at(i));
+			}
+			Process::WriteString(0x880CCB8, wrote, StringFormat::Utf16);
+			MessageBox("Invalid characters detected (%), fixed.")();
+		}
 		}
 		if (strstr(wrote.c_str(), "\\")) {
-            Process::WriteString(0x880CCB8, "??????????", StringFormat::Utf16);
-			OSD::Notify("Unsavable characters detected (\\), fixed.");
+		std::string toSearch("\\");
+		std::vector<size_t> IndexVec = GetSubstrIndexList(wrote, toSearch);
+		if (IndexVec.size())
+		{
+			for (size_t i = 0; i < IndexVec.size(); i++) {
+				ReplaceSTR(wrote, toSearch, "?", IndexVec.at(i));
+			}
+			Process::WriteString(0x880CCB8, wrote, StringFormat::Utf16);
+			MessageBox("Invalid characters detected (\\), fixed.")();
 		}
 		}
-		else if (Process::Read32(0x803CAEC, val) && val != 0xFFFFFFFF) {
-			MessageBox(Color::Red << "You don't seem to be in the editing menu")();
 		}
+		else MessageBox(Color::Red << "You don't seem to be in the editing menu")();
 		break;
 	case 1:
 		if (Process::Read32(0x803CAEC, val) && val == 0xFFFFFFFF) {
@@ -82,115 +68,72 @@ bool TWNReadNibble(u32 address, u8 &value, bool right_side) {
 		Process::Write16(0x880CCE2, 0);
 		OSD::Notify("Creator name changed!");
 				Process::ReadString(0x880CCCE, wrote, 0x20, StringFormat::Utf16);
-        if (strstr(wrote.c_str(), "%")) {
-            Process::WriteString(0x880CCCE, "??????????", StringFormat::Utf16);
-			OSD::Notify("Unsavable characters detected (%), fixed.");
+		if (strstr(wrote.c_str(), "%")) {
+		std::string toSearch("%");
+		std::vector<size_t> IndexVec = GetSubstrIndexList(wrote, toSearch);
+		if (IndexVec.size())
+		{
+			for (size_t i = 0; i < IndexVec.size(); i++) {
+				ReplaceSTR(wrote, toSearch, "?", IndexVec.at(i));
+			}
+			Process::WriteString(0x880CCCE, wrote, StringFormat::Utf16);
+			MessageBox("Invalid characters detected (%), fixed.")();
+		}
 		}
 		if (strstr(wrote.c_str(), "\\")) {
-            Process::WriteString(0x880CCCE, "??????????", StringFormat::Utf16);
-			OSD::Notify("Unsavable characters detected (\\), fixed.");
+		std::string toSearch("\\");
+		std::vector<size_t> IndexVec = GetSubstrIndexList(wrote, toSearch);
+		if (IndexVec.size())
+		{
+			for (size_t i = 0; i < IndexVec.size(); i++) {
+				ReplaceSTR(wrote, toSearch, "?", IndexVec.at(i));
+			}
+			Process::WriteString(0x880CCCE, wrote, StringFormat::Utf16);
+			MessageBox("Invalid characters detected (\\), fixed.")();
 		}
 		}
-		else if (Process::Read32(0x803CAEC, val) && val != 0xFFFFFFFF) {
-			MessageBox(Color::Red << "You don't seem to be in the editing menu")();
 		}
+		else MessageBox(Color::Red << "You don't seem to be in the editing menu")();
 		break;
 	}
 	}
-	bool TWNIsValidPosition(u32 browpos, u32 browspace, u32 browrot, u32 browsize, u32 browidth, u32 eyepos, u32 eyespace, u32 eyerot, u32 eyesize, u32 eyewidth, u32 nosepos, u32 nosesize, u32 mouthpos, u32 mouthsize, u32 mouthwidth, u32 glasspos, u32 glassize, u32 stachepos, u32 stachesize, u32 molex, u32 moley, u32 molesize, u32 tall, u32 wide, u32 gold, u32 share, u8 nibble, u8 val)
-	{
-		if((browpos & 0xFF) < 0x3)//all stuff that is invalid
-		return false;
-		if((browpos & 0xFF) > 0x12)
-		return false;
-		if((browspace & 0xFF) > 0xC)
-		return false;
-		if((browrot & 0xFF) > 0xB)
-		return false;
-		if((browsize & 0xFF) > 0x8)
-		return false;
-		if((browidth & 0xFF) > 0x6)
-		return false;
-		if((eyepos & 0xFF) > 0x12)
-		return false;
-		if((eyespace & 0xFF) > 0xC)
-		return false;
-		if((eyerot & 0xFF) > 0x7)
-		return false;
-		if((eyesize & 0xFF) > 0x7)
-		return false;
-		if((eyewidth & 0xFF) > 0x6)
-		return false;
-		if((nosepos & 0xFF) > 0x12)
-		return false;
-		if((nosesize & 0xFF) > 0x8)
-		return false;
-		if((mouthpos & 0xFF) > 0x12)
-		return false;
-		if((mouthsize & 0xFF) > 0x8)
-		return false;
-		if((mouthwidth & 0xFF) > 0x6)
-		return false;
-		if((glasspos & 0xFF) > 0x14)
-		return false;
-		if((glassize & 0xFF) > 0x7)
-		return false;
-		if((stachepos & 0xFF) > 0x10)
-		return false;
-		if((stachesize & 0xFF) > 0x8)
-		return false;
-		if((molex & 0xFF) > 0x10)
-		return false;
-		if((moley & 0xFF) > 0x1E)
-		return false;
-		if((molesize & 0xFF) > 0x8)
-		return false;
-		if((tall & 0xFF) > 0x7F)
-		return false;
-		if((wide & 0xFF) > 0x7F)
-		return false;
-		if (Process::Read8(share, val) && val == 0 && TWNReadNibble(gold, nibble, false) && nibble == 1)
-		return false;
-		
-	
-	return true;
-	}
+
 	bool TWNvalidOSD(const Screen &screen)
 	{
 		u32 browpos = 0x880CC58; //0x8C8C difference from regular
-		u32 browspace = 0x880CC54;//
-		u32 browrot = 0x880CC50;//
-		u32 browsize = 0x880CC48;//
-		u32 browidth = 0x88158D8;//
-		u32 eyepos = 0x880CC4C;//
-		u32 eyespace = 0x880CC38;//
-		u32 eyerot = 0x880CC34;//
-		u32 eyesize = 0x880CC2C;//
-		u32 eyewidth = 0x880CC30;//
-		u32 nosepos = 0x880CC64;//
-		u32 nosesize = 0x880CC60;//
-		u32 mouthpos = 0x880CC78;//
-		u32 mouthsize = 0x880CC70;//
-		u32 mouthwidth = 0x880CC74;//
-		u32 glasspos = 0x880CC9C;//
-		u32 glassize = 0x880CC98;//
-		u32 stachepos = 0x880CC8C;//
-		u32 stachesize = 0x880CC88;//
-		u32 molex = 0x880CCA8;//
-		u32 moley = 0x880CCAC;//
-		u32 molesize = 0x880CCA4;//
-		u32 tall = 0x880CCB0;//
-		u32 wide = 0x880CCB4;//
-		u32 share = 0x880CCF7;//
-		u32 gold = 0x880CD0C;//
+		u32 browspace = 0x880CC54;///
+		u32 browrot = 0x880CC50;///
+		u32 browsize = 0x880CC48;///
+		u32 browidth = 0x880CC4C;///
+		u32 eyepos = 0x880CC3C;///
+		u32 eyespace = 0x880CC38;///
+		u32 eyerot = 0x880CC34;///
+		u32 eyesize = 0x880CC2C;///
+		u32 eyewidth = 0x880CC30;///
+		u32 nosepos = 0x880CC64;///
+		u32 nosesize = 0x880CC60;///
+		u32 mouthpos = 0x880CC78;///
+		u32 mouthsize = 0x880CC70;///
+		u32 mouthwidth = 0x880CC74;///
+		u32 glasspos = 0x880CC9C;///
+		u32 glassize = 0x880CC98;///
+		u32 stachepos = 0x880CC8C;///
+		u32 stachesize = 0x880CC88;///
+		u32 molex = 0x880CCA8;///
+		u32 moley = 0x880CCAC;///
+		u32 molesize = 0x880CCA4;///
+		u32 tall = 0x880CCB0;///
+		u32 wide = 0x880CCB4;///
+		u32 share = 0x880CCF7;///
+		u32 gold = 0x880CD0C;///
 		u8 val;
 		u8 nibble;
 		if (screen.IsTop && (*(u32 *)0x803CAEC == 0xFFFFFFFF))
 		{
-			if(!TWNIsValidPosition(*(u8 *)browpos, *(u8 *)browspace, *(u8 *)browrot, *(u8 *)browsize, *(u8 *)browidth, *(u8 *)eyepos, *(u8 *)eyespace, *(u8 *)eyerot, *(u8 *)eyesize, *(u8 *)eyewidth, *(u8 *)nosepos, *(u8 *)nosesize, *(u8 *)mouthpos, *(u8 *)mouthsize, *(u8 *)mouthwidth, *(u8 *)glasspos, *(u8 *)glassize, *(u8 *)stachepos, *(u8 *)stachesize, *(u8 *)molex, *(u8 *)moley, *(u8 *)molesize, *(u8 *)tall, *(u8 *)wide, *(u8 *)gold, *(u8 *)share, val, nibble)) {
-			screen.Draw("" << Color::Red << "Unsavable", 0, 0);
+			if(!IsValidPosition(*(u8 *)browpos, *(u8 *)browspace, *(u8 *)browrot, *(u8 *)browsize, *(u8 *)browidth, *(u8 *)eyepos, *(u8 *)eyespace, *(u8 *)eyerot, *(u8 *)eyesize, *(u8 *)eyewidth, *(u8 *)nosepos, *(u8 *)nosesize, *(u8 *)mouthpos, *(u8 *)mouthsize, *(u8 *)mouthwidth, *(u8 *)glasspos, *(u8 *)glassize, *(u8 *)stachepos, *(u8 *)stachesize, *(u8 *)molex, *(u8 *)moley, *(u8 *)molesize, *(u8 *)tall, *(u8 *)wide, *(u8 *)gold, *(u8 *)share, val, nibble)) {
+			screen.Draw("Unsavable", 0, 0, Color::Red);
 			}
-			else screen.Draw("" << Color::Green << "Savable", 0, 0);
+			else screen.Draw("Savable", 0, 0, Color::Green);
 		}
 		return true;
 	}
@@ -343,7 +286,6 @@ bool TWNReadNibble(u32 address, u8 &value, bool right_side) {
 		std::string name;
 		std::string create;
 		std::string finame;
-		std::string fifiname;
 		u32 pers;
 		u32 reg;
 		u32 sysID;
@@ -381,20 +323,35 @@ bool TWNReadNibble(u32 address, u8 &value, bool right_side) {
 				Process::WriteString((0x5C * val) + (0x1488B920 + 0x22), name, StringFormat::Utf16);
 				if (Process::ReadString((0x5C * val) + (0x1488B920 + 0x22), finame, 20, StringFormat::Utf16)) {
 				if (strstr(finame.c_str(), "%")) {
-				Process::WriteString((0x5C * val) + (0x1488B920 + 0x22), "??????????", StringFormat::Utf16);
-				Sleep(Milliseconds(100));
-				MessageBox("Invalid characters detected (%), fixed.")();
+				std::string toSearch("%");
+				std::vector<size_t> IndexVec = GetSubstrIndexList(finame, toSearch);
+				if (IndexVec.size())
+				{
+					for (size_t i = 0; i < IndexVec.size(); i++) {
+						ReplaceSTR(finame, toSearch, "?", IndexVec.at(i));
+					}
+					Process::WriteString((0x5C * val) + (0x1488B920 + 0x22), finame, StringFormat::Utf16);
+					Sleep(Milliseconds(100));
+					MessageBox("Invalid characters detected (%), fixed.")();
+				}
 				}
 				if (strstr(finame.c_str(), "\\")) {
-				Process::WriteString((0x5C * val) + (0x1488B920 + 0x22), "??????????", StringFormat::Utf16);
-				Sleep(Milliseconds(100));
-				MessageBox("Invalid characters detected (\\), fixed.")();
+				std::string toSearch("\\");
+				std::vector<size_t> IndexVec = GetSubstrIndexList(finame, toSearch);
+				if (IndexVec.size())
+				{
+					for (size_t i = 0; i < IndexVec.size(); i++) {
+						ReplaceSTR(finame, toSearch, "?", IndexVec.at(i));
+					}
+					Process::WriteString((0x5C * val) + (0x1488B920 + 0x22), finame, StringFormat::Utf16);
+					Sleep(Milliseconds(100));
+					MessageBox("Invalid characters detected (\\), fixed.")();
+				}
 				}
 				Sleep(Milliseconds(100));
 				Process::Write16((0x5C * val) + 0x1488B956, fix);
-				if(Process::ReadString((0x5C * val) + (0x1488B920 + 0x22), fifiname, 20, StringFormat::Utf16)) {
-				MessageBox("Name changed to \u0022" + fifiname + "\u0022!\n(Reload and save to make changes)")();
-				}
+				//if(Process::ReadString((0x5C * val) + (0x1488B920 + 0x22), fifiname, 20, StringFormat::Utf16)) {
+				MessageBox("Name changed to \u0022" + finame + "\u0022!\n(Reload and save to make changes)")();
 				}
 			}
 				break;
@@ -413,20 +370,35 @@ bool TWNReadNibble(u32 address, u8 &value, bool right_side) {
 				Process::WriteString((0x5C * val) + (0x1488B920 + 0x50), create, StringFormat::Utf16);
 				if (Process::ReadString((0x5C * val) + (0x1488B920 + 0x50), finame, 20, StringFormat::Utf16)) {
 				if (strstr(finame.c_str(), "%")) {
-				Process::WriteString((0x5C * val) + (0x1488B920 + 0x50), "??????????", StringFormat::Utf16);
-				Sleep(Milliseconds(100));
-				MessageBox("Invalid characters detected (%), fixed.")();
+				std::string toSearch("%");
+				std::vector<size_t> IndexVec = GetSubstrIndexList(finame, toSearch);
+				if (IndexVec.size())
+				{
+					for (size_t i = 0; i < IndexVec.size(); i++) {
+						ReplaceSTR(finame, toSearch, "?", IndexVec.at(i));
+					}
+					Process::WriteString((0x5C * val) + (0x1488B920 + 0x50), finame, StringFormat::Utf16);
+					Sleep(Milliseconds(100));
+					MessageBox("Invalid characters detected (%), fixed.")();
+				}
 				}
 				if (strstr(finame.c_str(), "\\")) {
-				Process::WriteString((0x5C * val) + (0x1488B920 + 0x50), "??????????", StringFormat::Utf16);
-				Sleep(Milliseconds(100));
-				MessageBox("Invalid characters detected (\\), fixed.")();
+				std::string toSearch("\\");
+				std::vector<size_t> IndexVec = GetSubstrIndexList(finame, toSearch);
+				if (IndexVec.size())
+				{
+					for (size_t i = 0; i < IndexVec.size(); i++) {
+						ReplaceSTR(finame, toSearch, "?", IndexVec.at(i));
+					}
+					Process::WriteString((0x5C * val) + (0x1488B920 + 0x50), finame, StringFormat::Utf16);
+					Sleep(Milliseconds(100));
+					MessageBox("Invalid characters detected (\\), fixed.")();
+				}
 				}
 				Sleep(Milliseconds(100));
 				Process::Write16((0x5C * val) + 0x1488B984, fix);
-				if(Process::ReadString((0x5C * val) + (0x1488B920 + 0x50), fifiname, 20, StringFormat::Utf16)) {
-				MessageBox("Creator name changed to \u0022" + fifiname + "\u0022!\n(Reload and save to make changes)")();
-				}
+				//if(Process::ReadString((0x5C * val) + (0x1488B920 + 0x50), fifiname, 20, StringFormat::Utf16)) {
+				MessageBox("Creator name changed to \u0022" + finame + "\u0022!\n(Reload and save to make changes)")();
 				}
 			}
 				break;
@@ -468,27 +440,28 @@ bool TWNReadNibble(u32 address, u8 &value, bool right_side) {
 			case 3://color (shares space with favorite) done
 			{
 			Sleep(Milliseconds(100));
-			TWNcolorOpt.push_back(Color(0xD21E14FF) << TWNcolOpt[0]);//red
-			TWNcolorOpt.push_back(Color(0xFF6E19FF) << TWNcolOpt[1]);//orange
-			TWNcolorOpt.push_back(Color(0xFFD820FF) << TWNcolOpt[2]);//yellow
-			TWNcolorOpt.push_back(Color(0x78D220FF) << TWNcolOpt[3]);//lime
-			TWNcolorOpt.push_back(Color(0x007830FF) << TWNcolOpt[4]);//green
-			TWNcolorOpt.push_back(Color(0x204898FF) << TWNcolOpt[5]);//blue
-			TWNcolorOpt.push_back(Color(0x3CAADEFF) << TWNcolOpt[6]);//cyan
-			TWNcolorOpt.push_back(Color(0xF55A7DFF) << TWNcolOpt[7]);//pink
-			TWNcolorOpt.push_back(Color(0x7328ADFF) << TWNcolOpt[8]);//purple
-			TWNcolorOpt.push_back(Color(0x483818FF) << TWNcolOpt[9]);//brown
-			TWNcolorOpt.push_back(Color(0xE0E0E0FF) << TWNcolOpt[10]);//white
-			TWNcolorOpt.push_back(Color(0x181814FF) << TWNcolOpt[11]);//black
+			TWNcolorOpt.push_back(Color(red) << TWNcolOpt[0]);
+			TWNcolorOpt.push_back(Color(orange) << TWNcolOpt[1]);
+			TWNcolorOpt.push_back(Color(yellow) << TWNcolOpt[2]);
+			TWNcolorOpt.push_back(Color(lime) << TWNcolOpt[3]);
+			TWNcolorOpt.push_back(Color(green) << TWNcolOpt[4]);
+			TWNcolorOpt.push_back(Color(blue) << TWNcolOpt[5]);
+			TWNcolorOpt.push_back(Color(cyan) << TWNcolOpt[6]);
+			TWNcolorOpt.push_back(Color(pink) << TWNcolOpt[7]);
+			TWNcolorOpt.push_back(Color(purple) << TWNcolOpt[8]);
+			TWNcolorOpt.push_back(Color(brown) << TWNcolOpt[9]);
+			TWNcolorOpt.push_back(Color(white) << TWNcolOpt[10]);
+			TWNcolorOpt.push_back(Color(black) << TWNcolOpt[11]);
 			
 			        Keyboard    keyboard("Pick a new color:", TWNcolorOpt);
 					TWNColChoice = keyboard.Open();
-					if (TWNColChoice == 0)//red
+					if (TWNColChoice != -1)
 					{
-						if (Process::Read8((0x17200 * val) + (0x8831D70), check) && check == 0)//if its already red
+						std::string picked = colorcolor(TWNColChoice);
+						if (Process::Read8((0x17200 * val) + (0x8831D70), check) && check == TWNColChoice)//if its already the color you pick
 						{
 						Sleep(Milliseconds(100));
-						MessageBox("The shirt is already red!")();
+						MessageBox("The shirt is already " << picked << "!")();
 						}
 						else
 						{
@@ -502,11 +475,11 @@ bool TWNReadNibble(u32 address, u8 &value, bool right_side) {
 								Process::Write8((0x17200 * val) + (0x8831D64), 1);
 							}
 							Process::Read8((0x5C * val) + (0x1488B941), color);
-							Process::Write8((0x5C * val) + (0x1488B941), color + 0);//write red value
+							Process::Write8((0x5C * val) + (0x1488B941), color + (4 * TWNColChoice));//write color value
 							Process::Read8((0x5C * val) + (0x1488B941), fav);
 							Process::Write8((0x5C * val) + (0x1488B941), (fav + 0x40));//make it favorite again
 							}
-							else if(check == 0) {
+							else if(check == 0) {//if its not favorite
 								Process::Read8((0x17200 * val) + (0x8831D64), gen);
 								Process::Write16((0x5C * val) + (0x1488B940), 0);
 								if(gen == 0x1) {
@@ -515,440 +488,11 @@ bool TWNReadNibble(u32 address, u8 &value, bool right_side) {
 									Process::Write8((0x17200 * val) + (0x8831D64), 1);
 								}
 								Process::Read8((0x5C * val) + (0x1488B941), color);
-								Process::Write8((0x5C * val) + (0x1488B941), color + 0);//just make it red
+								Process::Write8((0x5C * val) + (0x1488B941), color + (4 * TWNColChoice));//just make it the color
 							}
-							Process::Write8((0x17200 * val) + (0x8831D70), 0);//adjust internal
+							Process::Write8((0x17200 * val) + (0x8831D70), TWNColChoice);//adjust internal
 							Sleep(Milliseconds(100));
-							MessageBox("The shirt is now red!\n(Reload and save to make changes)")();
-						}
-					}
-					if (TWNColChoice == 1)//orange
-					{
-						if (Process::Read8((0x17200 * val) + (0x8831D70), check) && check == 0x1)
-						{
-						Sleep(Milliseconds(100));
-						MessageBox("The shirt is already orange!")();
-						}
-						else
-						{
-							if (Process::Read8((0x17200 * val) + (0x8831D74), check) && check == 0x1)
-							{
-							Process::Read8((0x17200 * val) + (0x8831D64), gen);
-							Process::Write16((0x5C * val) + (0x1488B940), 0);
-							if(gen == 0x1) {
-								Process::Read8((0x5C * val) + (0x1488B940), gen);
-								Process::Write8((0x5C * val) + (0x1488B940), (gen + 1));
-								Process::Write8((0x17200 * val) + (0x8831D64), 1);
-							}
-							Process::Read8((0x5C * val) + (0x1488B941), color);
-							Process::Write8((0x5C * val) + (0x1488B941), color + 0x4);
-							Process::Read8((0x5C * val) + (0x1488B941), fav);
-							Process::Write8((0x5C * val) + (0x1488B941), (fav + 0x40));
-							}
-							else if(check == 0) {
-								Process::Read8((0x17200 * val) + (0x8831D64), gen);
-								Process::Write16((0x5C * val) + (0x1488B940), 0);
-								if(gen == 0x1) {
-									Process::Read8((0x5C * val) + (0x1488B940), gen);
-									Process::Write8((0x5C * val) + (0x1488B940), (gen + 1));
-									Process::Write8((0x17200 * val) + (0x8831D64), 1);
-								}
-								Process::Read8((0x5C * val) + (0x1488B941), color);
-								Process::Write8((0x5C * val) + (0x1488B941), color + 0x4);
-							}
-							Process::Write8((0x17200 * val) + (0x8831D70), 0x1);
-							Sleep(Milliseconds(100));
-							MessageBox("The shirt is now orange!\n(Reload and save to make changes)")();
-						}
-					}
-					if (TWNColChoice == 2)//yellow
-					{
-						if (Process::Read8((0x17200 * val) + (0x8831D70), check) && check == 0x2)
-						{
-						Sleep(Milliseconds(100));
-						MessageBox("The shirt is already yellow!")();
-						}
-						else
-						{
-							if (Process::Read8((0x17200 * val) + (0x8831D74), check) && check == 0x1)
-							{
-							Process::Read8((0x17200 * val) + (0x8831D64), gen);
-							Process::Write16((0x5C * val) + (0x1488B940), 0);
-							if(gen == 0x1) {
-								Process::Read8((0x5C * val) + (0x1488B940), gen);
-								Process::Write8((0x5C * val) + (0x1488B940), (gen + 1));
-								Process::Write8((0x17200 * val) + (0x8831D64), 1);
-							}
-							Process::Read8((0x5C * val) + (0x1488B941), color);
-							Process::Write8((0x5C * val) + (0x1488B941), color + 0x8);
-							Process::Read8((0x5C * val) + (0x1488B941), fav);
-							Process::Write8((0x5C * val) + (0x1488B941), (fav + 0x40));
-							}
-							else if(check == 0) {
-								Process::Read8((0x17200 * val) + (0x8831D64), gen);
-								Process::Write16((0x5C * val) + (0x1488B940), 0);
-								if(gen == 0x1) {
-									Process::Read8((0x5C * val) + (0x1488B940), gen);
-									Process::Write8((0x5C * val) + (0x1488B940), (gen + 1));
-									Process::Write8((0x17200 * val) + (0x8831D64), 1);
-								}
-								Process::Read8((0x5C * val) + (0x1488B941), color);
-								Process::Write8((0x5C * val) + (0x1488B941), color + 0x8);
-							}
-							Process::Write8((0x17200 * val) + (0x8831D70), 0x2);
-							Sleep(Milliseconds(100));
-							MessageBox("The shirt is now yellow!\n(Reload and save to make changes)")();
-						}
-					}
-					if (TWNColChoice == 3)//lime
-					{
-						if (Process::Read8((0x17200 * val) + (0x8831D70), check) && check == 0x3)
-						{
-						Sleep(Milliseconds(100));
-						MessageBox("The shirt is already lime!")();
-						}
-						else
-						{
-							if (Process::Read8((0x17200 * val) + (0x8831D74), check) && check == 0x1)
-							{
-							Process::Read8((0x17200 * val) + (0x8831D64), gen);
-							Process::Write16((0x5C * val) + (0x1488B940), 0);
-							if(gen == 0x1) {
-								Process::Read8((0x5C * val) + (0x1488B940), gen);
-								Process::Write8((0x5C * val) + (0x1488B940), (gen + 1));
-								Process::Write8((0x17200 * val) + (0x8831D64), 1);
-							}
-							Process::Read8((0x5C * val) + (0x1488B941), color);
-							Process::Write8((0x5C * val) + (0x1488B941), color + 0xC);
-							Process::Read8((0x5C * val) + (0x1488B941), fav);
-							Process::Write8((0x5C * val) + (0x1488B941), (fav + 0x40));
-							}
-							else if(check == 0) {
-								Process::Read8((0x17200 * val) + (0x8831D64), gen);
-								Process::Write16((0x5C * val) + (0x1488B940), 0);
-								if(gen == 0x1) {
-									Process::Read8((0x5C * val) + (0x1488B940), gen);
-									Process::Write8((0x5C * val) + (0x1488B940), (gen + 1));
-									Process::Write8((0x17200 * val) + (0x8831D64), 1);
-								}
-								Process::Read8((0x5C * val) + (0x1488B941), color);
-								Process::Write8((0x5C * val) + (0x1488B941), color + 0xC);
-							}
-							Process::Write8((0x17200 * val) + (0x8831D70), 0x3);
-							Sleep(Milliseconds(100));
-							MessageBox("The shirt is now lime!\n(Reload and save to make changes)")();
-						}
-					}
-					if (TWNColChoice == 4)//green
-					{
-						if (Process::Read8((0x17200 * val) + (0x8831D70), check) && check == 0x4)
-						{
-						Sleep(Milliseconds(100));
-						MessageBox("The shirt is already green!")();
-						}
-						else
-						{
-							if (Process::Read8((0x17200 * val) + (0x8831D74), check) && check == 0x1)
-							{
-							Process::Read8((0x17200 * val) + (0x8831D64), gen);
-							Process::Write16((0x5C * val) + (0x1488B940), 0);
-							if(gen == 0x1) {
-								Process::Read8((0x5C * val) + (0x1488B940), gen);
-								Process::Write8((0x5C * val) + (0x1488B940), (gen + 1));
-								Process::Write8((0x17200 * val) + (0x8831D64), 1);
-							}
-							Process::Read8((0x5C * val) + (0x1488B941), color);
-							Process::Write8((0x5C * val) + (0x1488B941), color + 0x10);
-							Process::Read8((0x5C * val) + (0x1488B941), fav);
-							Process::Write8((0x5C * val) + (0x1488B941), (fav + 0x40));
-							}
-							else if(check == 0) {
-								Process::Read8((0x17200 * val) + (0x8831D64), gen);
-								Process::Write16((0x5C * val) + (0x1488B940), 0);
-								if(gen == 0x1) {
-									Process::Read8((0x5C * val) + (0x1488B940), gen);
-									Process::Write8((0x5C * val) + (0x1488B940), (gen + 1));
-									Process::Write8((0x17200 * val) + (0x8831D64), 1);
-								}
-								Process::Read8((0x5C * val) + (0x1488B941), color);
-								Process::Write8((0x5C * val) + (0x1488B941), color + 0x10);
-							}
-							Process::Write8((0x17200 * val) + (0x8831D70), 0x4);
-							Sleep(Milliseconds(100));
-							MessageBox("The shirt is now green!\n(Reload and save to make changes)")();
-						}
-					}
-					if (TWNColChoice == 5)//blue
-					{
-						if (Process::Read8((0x17200 * val) + (0x8831D70), check) && check == 0x5)
-						{
-						Sleep(Milliseconds(100));
-						MessageBox("The shirt is already blue!")();
-						}
-						else
-						{
-							if (Process::Read8((0x17200 * val) + (0x8831D74), check) && check == 0x1)
-							{
-							Process::Read8((0x17200 * val) + (0x8831D64), gen);
-							Process::Write16((0x5C * val) + (0x1488B940), 0);
-							if(gen == 0x1) {
-								Process::Read8((0x5C * val) + (0x1488B940), gen);
-								Process::Write8((0x5C * val) + (0x1488B940), (gen + 1));
-								Process::Write8((0x17200 * val) + (0x8831D64), 1);
-							}
-							Process::Read8((0x5C * val) + (0x1488B941), color);
-							Process::Write8((0x5C * val) + (0x1488B941), color + 0x14);
-							Process::Read8((0x5C * val) + (0x1488B941), fav);
-							Process::Write8((0x5C * val) + (0x1488B941), (fav + 0x40));
-							}
-							else if(check == 0) {
-								Process::Read8((0x17200 * val) + (0x8831D64), gen);
-								Process::Write16((0x5C * val) + (0x1488B940), 0);
-								if(gen == 0x1) {
-									Process::Read8((0x5C * val) + (0x1488B940), gen);
-									Process::Write8((0x5C * val) + (0x1488B940), (gen + 1));
-									Process::Write8((0x17200 * val) + (0x8831D64), 1);
-								}
-								Process::Read8((0x5C * val) + (0x1488B941), color);
-								Process::Write8((0x5C * val) + (0x1488B941), color + 0x14);
-							}
-							Process::Write8((0x17200 * val) + (0x8831D70), 0x5);
-							Sleep(Milliseconds(100));
-							MessageBox("The shirt is now blue!\n(Reload and save to make changes)")();
-						}
-					}
-					if (TWNColChoice == 6)//cyan
-					{
-						if (Process::Read8((0x17200 * val) + (0x8831D70), check) && check == 0x6)
-						{
-						Sleep(Milliseconds(100));
-						MessageBox("The shirt is already cyan!")();
-						}
-						else
-						{
-							if (Process::Read8((0x17200 * val) + (0x8831D74), check) && check == 0x1)
-							{
-							Process::Read8((0x17200 * val) + (0x8831D64), gen);
-							Process::Write16((0x5C * val) + (0x1488B940), 0);
-							if(gen == 0x1) {
-								Process::Read8((0x5C * val) + (0x1488B940), gen);
-								Process::Write8((0x5C * val) + (0x1488B940), (gen + 1));
-								Process::Write8((0x17200 * val) + (0x8831D64), 1);
-							}
-							Process::Read8((0x5C * val) + (0x1488B941), color);
-							Process::Write8((0x5C * val) + (0x1488B941), color + 0x18);
-							Process::Read8((0x5C * val) + (0x1488B941), fav);
-							Process::Write8((0x5C * val) + (0x1488B941), (fav + 0x40));
-							}
-							else if(check == 0) {
-								Process::Read8((0x17200 * val) + (0x8831D64), gen);
-								Process::Write16((0x5C * val) + (0x1488B940), 0);
-								if(gen == 0x1) {
-									Process::Read8((0x5C * val) + (0x1488B940), gen);
-									Process::Write8((0x5C * val) + (0x1488B940), (gen + 1));
-									Process::Write8((0x17200 * val) + (0x8831D64), 1);
-								}
-								Process::Read8((0x5C * val) + (0x1488B941), color);
-								Process::Write8((0x5C * val) + (0x1488B941), color + 0x18);
-							}
-							Process::Write8((0x17200 * val) + (0x8831D70), 0x6);
-							Sleep(Milliseconds(100));
-							MessageBox("The shirt is now cyan!\n(Reload and save to make changes)")();
-						}
-					}
-					if (TWNColChoice == 7)//pink
-					{
-						if (Process::Read8((0x17200 * val) + (0x8831D70), check) && check == 0x7)
-						{
-						Sleep(Milliseconds(100));
-						MessageBox("The shirt is already pink!")();
-						}
-						else
-						{
-							if (Process::Read8((0x17200 * val) + (0x8831D74), check) && check == 0x1)
-							{
-							Process::Read8((0x17200 * val) + (0x8831D64), gen);
-							Process::Write16((0x5C * val) + (0x1488B940), 0);
-							if(gen == 0x1) {
-								Process::Read8((0x5C * val) + (0x1488B940), gen);
-								Process::Write8((0x5C * val) + (0x1488B940), (gen + 1));
-								Process::Write8((0x17200 * val) + (0x8831D64), 1);
-							}
-							Process::Read8((0x5C * val) + (0x1488B941), color);
-							Process::Write8((0x5C * val) + (0x1488B941), color + 0x1C);
-							Process::Read8((0x5C * val) + (0x1488B941), fav);
-							Process::Write8((0x5C * val) + (0x1488B941), (fav + 0x40));
-							}
-							else if(check == 0) {
-								Process::Read8((0x17200 * val) + (0x8831D64), gen);
-								Process::Write16((0x5C * val) + (0x1488B940), 0);
-								if(gen == 0x1) {
-									Process::Read8((0x5C * val) + (0x1488B940), gen);
-									Process::Write8((0x5C * val) + (0x1488B940), (gen + 1));
-									Process::Write8((0x17200 * val) + (0x8831D64), 1);
-								}
-								Process::Read8((0x5C * val) + (0x1488B941), color);
-								Process::Write8((0x5C * val) + (0x1488B941), color + 0x1C);
-							}
-							Process::Write8((0x17200 * val) + (0x8831D70), 0x7);
-							Sleep(Milliseconds(100));
-							MessageBox("The shirt is now pink!\n(Reload and save to make changes)")();
-						}
-					}
-					if (TWNColChoice == 8)//purple
-					{
-						if (Process::Read8((0x17200 * val) + (0x8831D70), check) && check == 0x8)
-						{
-						Sleep(Milliseconds(100));
-						MessageBox("The shirt is already purple!")();
-						}
-						else
-						{
-							if (Process::Read8((0x17200 * val) + (0x8831D74), check) && check == 0x1)
-							{
-							Process::Read8((0x17200 * val) + (0x8831D64), gen);
-							Process::Write16((0x5C * val) + (0x1488B940), 0);
-							if(gen == 0x1) {
-								Process::Read8((0x5C * val) + (0x1488B940), gen);
-								Process::Write8((0x5C * val) + (0x1488B940), (gen + 1));
-								Process::Write8((0x17200 * val) + (0x8831D64), 1);
-							}
-							Process::Read8((0x5C * val) + (0x1488B941), color);
-							Process::Write8((0x5C * val) + (0x1488B941), color + 0x20);
-							Process::Read8((0x5C * val) + (0x1488B941), fav);
-							Process::Write8((0x5C * val) + (0x1488B941), (fav + 0x40));
-							}
-							else if(check == 0) {
-								Process::Read8((0x17200 * val) + (0x8831D64), gen);
-								Process::Write16((0x5C * val) + (0x1488B940), 0);
-								if(gen == 0x1) {
-									Process::Read8((0x5C * val) + (0x1488B940), gen);
-									Process::Write8((0x5C * val) + (0x1488B940), (gen + 1));
-									Process::Write8((0x17200 * val) + (0x8831D64), 1);
-								}
-								Process::Read8((0x5C * val) + (0x1488B941), color);
-								Process::Write8((0x5C * val) + (0x1488B941), color + 0x20);
-							}
-							Process::Write8((0x17200 * val) + (0x8831D70), 0x8);
-							Sleep(Milliseconds(100));
-							MessageBox("The shirt is now purple!\n(Reload and save to make changes)")();
-						}
-					}
-					if (TWNColChoice == 9)//brown
-					{
-						if (Process::Read8((0x17200 * val) + (0x8831D70), check) && check == 0x9)
-						{
-						Sleep(Milliseconds(100));
-						MessageBox("The shirt is already brown!")();
-						}
-						else
-						{
-							if (Process::Read8((0x17200 * val) + (0x8831D74), check) && check == 0x1)
-							{
-							Process::Read8((0x17200 * val) + (0x8831D64), gen);
-							Process::Write16((0x5C * val) + (0x1488B940), 0);
-							if(gen == 0x1) {
-								Process::Read8((0x5C * val) + (0x1488B940), gen);
-								Process::Write8((0x5C * val) + (0x1488B940), (gen + 1));
-								Process::Write8((0x17200 * val) + (0x8831D64), 1);
-							}
-							Process::Read8((0x5C * val) + (0x1488B941), color);
-							Process::Write8((0x5C * val) + (0x1488B941), color + 0x24);
-							Process::Read8((0x5C * val) + (0x1488B941), fav);
-							Process::Write8((0x5C * val) + (0x1488B941), (fav + 0x40));
-							}
-							else if(check == 0) {
-								Process::Read8((0x17200 * val) + (0x8831D64), gen);
-								Process::Write16((0x5C * val) + (0x1488B940), 0);
-								if(gen == 0x1) {
-									Process::Read8((0x5C * val) + (0x1488B940), gen);
-									Process::Write8((0x5C * val) + (0x1488B940), (gen + 1));
-									Process::Write8((0x17200 * val) + (0x8831D64), 1);
-								}
-								Process::Read8((0x5C * val) + (0x1488B941), color);
-								Process::Write8((0x5C * val) + (0x1488B941), color + 0x24);
-							}
-							Process::Write8((0x17200 * val) + (0x8831D70), 0x9);
-							Sleep(Milliseconds(100));
-							MessageBox("The shirt is now brown!\n(Reload and save to make changes)")();
-						}
-					}
-					if (TWNColChoice == 10)//white
-					{
-						if (Process::Read8((0x17200 * val) + (0x8831D70), check) && check == 0xA)
-						{
-						Sleep(Milliseconds(100));
-						MessageBox("The shirt is already white!")();
-						}
-						else
-						{
-							if (Process::Read8((0x17200 * val) + (0x8831D74), check) && check == 0x1)
-							{
-							Process::Read8((0x17200 * val) + (0x8831D64), gen);
-							Process::Write16((0x5C * val) + (0x1488B940), 0);
-							if(gen == 0x1) {
-								Process::Read8((0x5C * val) + (0x1488B940), gen);
-								Process::Write8((0x5C * val) + (0x1488B940), (gen + 1));
-								Process::Write8((0x17200 * val) + (0x8831D64), 1);
-							}
-							Process::Read8((0x5C * val) + (0x1488B941), color);
-							Process::Write8((0x5C * val) + (0x1488B941), color + 0x28);
-							Process::Read8((0x5C * val) + (0x1488B941), fav);
-							Process::Write8((0x5C * val) + (0x1488B941), (fav + 0x40));
-							}
-							else if(check == 0) {
-								Process::Read8((0x17200 * val) + (0x8831D64), gen);
-								Process::Write16((0x5C * val) + (0x1488B940), 0);
-								if(gen == 0x1) {
-									Process::Read8((0x5C * val) + (0x1488B940), gen);
-									Process::Write8((0x5C * val) + (0x1488B940), (gen + 1));
-									Process::Write8((0x17200 * val) + (0x8831D64), 1);
-								}
-								Process::Read8((0x5C * val) + (0x1488B941), color);
-								Process::Write8((0x5C * val) + (0x1488B941), color + 0x28);
-							}
-							Process::Write8((0x17200 * val) + (0x8831D70), 0xA);
-							Sleep(Milliseconds(100));
-							MessageBox("The shirt is now white!\n(Reload and save to make changes)")();
-						}
-					}
-					if (TWNColChoice == 11)//black
-					{
-						if (Process::Read8((0x17200 * val) + (0x8831D70), check) && check == 0xB)
-						{
-						Sleep(Milliseconds(100));
-						MessageBox("The shirt is already black!")();
-						}
-						else
-						{
-							if (Process::Read8((0x17200 * val) + (0x8831D74), check) && check == 0x1)
-							{
-							Process::Read8((0x17200 * val) + (0x8831D64), gen);
-							Process::Write16((0x5C * val) + (0x1488B940), 0);
-							if(gen == 0x1) {
-								Process::Read8((0x5C * val) + (0x1488B940), gen);
-								Process::Write8((0x5C * val) + (0x1488B940), (gen + 1));
-								Process::Write8((0x17200 * val) + (0x8831D64), 1);
-							}
-							Process::Read8((0x5C * val) + (0x1488B941), color);
-							Process::Write8((0x5C * val) + (0x1488B941), color + 0x2C);
-							Process::Read8((0x5C * val) + (0x1488B941), fav);
-							Process::Write8((0x5C * val) + (0x1488B941), (fav + 0x40));
-							}
-							else if(check == 0) {
-								Process::Read8((0x17200 * val) + (0x8831D64), gen);
-								Process::Write16((0x5C * val) + (0x1488B940), 0);
-								if(gen == 0x1) {
-									Process::Read8((0x5C * val) + (0x1488B940), gen);
-									Process::Write8((0x5C * val) + (0x1488B940), (gen + 1));
-									Process::Write8((0x17200 * val) + (0x8831D64), 1);
-								}
-								Process::Read8((0x5C * val) + (0x1488B941), color);
-								Process::Write8((0x5C * val) + (0x1488B941), color + 0x2C);
-							}
-							Process::Write8((0x17200 * val) + (0x8831D70), 0xB);
-							Sleep(Milliseconds(100));
-							MessageBox("The shirt is now black!\n(Reload and save to make changes)")();
+							MessageBox("The shirt is now " << picked << "!\n(Reload and save to make changes)")();
 						}
 					}
 				break;
@@ -1006,7 +550,7 @@ bool TWNReadNibble(u32 address, u8 &value, bool right_side) {
 							Process::Read8((0x5C * val) + 0x1488B958, share);
 							Process::Write8((0x5C * val) + 0x1488B958, share - 1);
 							Process::Write8((0x17200 * val) + 0x8831D77, 0);
-							TWNWriteNibble((0x5C * val) + 0x1488B934, 9, false);
+							WriteNibble((0x5C * val) + 0x1488B934, 9, false);
 							Sleep(Milliseconds(100));
 							MessageBox("Sharing has been turned on!\n(Reload and save to make changes)")();
 						}
@@ -1076,19 +620,19 @@ bool TWNReadNibble(u32 address, u8 &value, bool right_side) {
 							Process::Read8((0x5C * val) + 0x1488B958, share);
 							Process::Write8((0x5C * val) + 0x1488B958, share + 1);
 							Process::Write8((0x17200 * val) + 0x8831D77, 0x1);
-							TWNWriteNibble((0x5C * val) + 0x1488B934, 1, false);
+							WriteNibble((0x5C * val) + 0x1488B934, 1, false);
 							Sleep(Milliseconds(100));
 							MessageBox("Mii has been specialized!\nDon't turn on sharing in the editor or else it won't save.\n(Reload and save to make changes)")();
 						}
 						else if(check == 1)
 						{
-							TWNWriteNibble((0x5C * val) + 0x1488B934, 1, false);
+							WriteNibble((0x5C * val) + 0x1488B934, 1, false);
 							Sleep(Milliseconds(100));
 							MessageBox("Mii has been specialized!\nDon't turn on sharing in the editor or else it won't save.\n(Reload and save to make changes)")();
 						}
 						break;
 					case 1:
-						TWNWriteNibble((0x5C * val) + 0x1488B934, 9, false);
+						WriteNibble((0x5C * val) + 0x1488B934, 9, false);
 						Sleep(Milliseconds(100));
 						MessageBox("Mii is no longer special\n(Reload and save to make changes)")();
 						break;
