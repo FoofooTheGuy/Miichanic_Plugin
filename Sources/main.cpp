@@ -1,5 +1,5 @@
 #include "cheats.hpp"
-#include "CTRPluginFramework.hpp"
+#include <CTRPluginFramework.hpp>
 
 void    abort(void);
 
@@ -104,9 +104,9 @@ exit:
 
     int	main()
 	{
-		if (Process::GetTitleID() == 0x0004001000020700 || Process::GetTitleID() == 0x0004001000021700 || Process::GetTitleID() == 0x0004001000022700)
+		if (Process::GetTitleID() == TID_JPN || Process::GetTitleID() == TID_USA || Process::GetTitleID() == TID_EUR)
 		{
-			PluginMenu *menu = new PluginMenu("Miichanic's Tool Box (JP/US/EU)", 0, 4, 6, "A set of cheats for 3DS Mii Maker made by Foofoo\n\nyoutube.com/c/foofooanimations");
+			PluginMenu *menu = new PluginMenu("Miichanic's Tool Box (JP/US/EU)", 0, 5, 0, "A set of cheats for 3DS Mii Maker made by Foofoo\n\nyoutube.com/c/foofooanimations");
 			menu->SynchronizeWithFrame(true);
 			
 			const std::vector<MenuEntry *> JPUSEUeditorEntries{
@@ -125,13 +125,14 @@ exit:
 			menu->Append(new MenuFolder("Save file options", JPUSEUsaveEntries));
 			menu->Append(new MenuEntry("Useless OSD", OSD, "Some useful OSD, just says the address of your current mii selection.\nThis might freeze the game, so only turn it on when you need it."));
 			menu->Append(new MenuEntry("Toggle theme", savetheme, "On is Light theme, and off is dark theme.\n(Close the menu for it to change)"));
+			menu->Append(new MenuEntry("Exit to home menu", nullptr, exitgame, "This is only really useful if the app stops you from closing it."));
 			
 			menu->Run();
 			delete menu;
 		}
-		if (Process::GetTitleID() == 0x0004001000028700 || Process::GetTitleID() == 0x0004001000026700 || Process::GetTitleID() == 0x0004001000027700)
+		if (Process::GetTitleID() == TID_CHN || Process::GetTitleID() == TID_TWN)
 		{
-			PluginMenu *menu = new PluginMenu("Miichanic's Tool Box (TWN/CHN/KOR?)", 0, 4, 6, "A set of cheats for 3DS Mii Studio made by Foofoo\n\nyoutube.com/c/foofooanimations");
+			PluginMenu *menu = new PluginMenu("Miichanic's Tool Box (CHN/TWN)", 0, 5, 0, "A set of cheats for 3DS Mii Studio made by Foofoo\n\nyoutube.com/c/foofooanimations");
 			menu->SynchronizeWithFrame(true);
 			
 			const std::vector<MenuEntry *> TWNeditorEntries{
@@ -150,6 +151,33 @@ exit:
 			menu->Append(new MenuFolder("Save file options", TWNsaveEntries));
 			menu->Append(new MenuEntry("Useless OSD", TWNOSD, "Some useful OSD, just says the address of your current mii selection.\nThis might freeze the game, so only turn it on when you need it."));
 			menu->Append(new MenuEntry("Toggle Theme", savetheme, "On is Light theme, and off is dark theme.\n(Close the menu for it to change)"));
+			menu->Append(new MenuEntry("Exit to home menu", nullptr, exitgame, "This is only really useful if the app stops you from closing it."));
+			
+			menu->Run();
+			delete menu;
+		}
+		if (Process::GetTitleID() == TID_KOR)
+		{
+			PluginMenu *menu = new PluginMenu("Miichanic's Tool Box (KOR)", 0, 5, 0, "A set of cheats for 3DS Mii Studio made by Foofoo\n\nyoutube.com/c/foofooanimations");
+			menu->SynchronizeWithFrame(true);
+			
+			const std::vector<MenuEntry *> KOReditorEntries{
+			new MenuEntry("Nickname / Creator Modifier", nullptr, KORnamedit, "Be free from the restrictions!\n(But the length is still capped at 10 because that doesn't actually save.)"),
+			EntryWithHotkey(new MenuEntry("Copy and paste Mii data", KORcopymii, "Copy any Mii!\nTap on a Mii in the View Mii Characters menu and press the hotkey to copy.\nThen go to the editor and use the paste hotkey.\nYou may have to edit something manually to make the preview update, but it's all there ready for saving."), { Hotkey(Key::DPadUp, "Copy Mii data"), Hotkey(Key::DPadDown, "Paste the Mii into editor")}),
+			};
+			
+			const std::vector<MenuEntry *> KORsaveEntries{
+			new MenuEntry("Dump save file", nullptr, KORdumpsave, "Backup your save file!\nDumps are stored in: SD:Miichanic/CFL_DB.dat"),
+			new MenuEntry("Restore save file", nullptr, KORrestoresave),
+			EntryWithHotkey(new MenuEntry("mega menu", KORmegamenu, "tap on a mii and press the hotkeys, it can't do everything, but it's useful."), { Hotkey(Key::A | Key::DPadRight, "Open menu")}),
+			};
+			
+			// ítems
+			menu->Append(new MenuFolder("Editor codes", KOReditorEntries));
+			menu->Append(new MenuFolder("Save file options", KORsaveEntries));
+			menu->Append(new MenuEntry("Useless OSD", KOROSD, "Some useful OSD, just says the address of your current mii selection.\nThis might freeze the game, so only turn it on when you need it."));
+			menu->Append(new MenuEntry("Toggle Theme", savetheme, "On is Light theme, and off is dark theme.\n(Close the menu for it to change)"));
+			menu->Append(new MenuEntry("Exit to home menu", nullptr, exitgame, "This is only really useful if the app stops you from closing it."));
 			
 			menu->Run();
 			delete menu;
