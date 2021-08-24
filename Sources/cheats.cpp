@@ -207,55 +207,55 @@ void ReplaceSTR(std::string &str, const std::string &oldSTR, const std::string &
 	{
 		if((browpos & 0xFF) < 0x3)//all stuff that is invalid
 		return false;
-		if((browpos & 0xFF) > 0x12)
+		else if((browpos & 0xFF) > 0x12)
 		return false;
-		if((browspace & 0xFF) > 0xC)
+		else if((browspace & 0xFF) > 0xC)
 		return false;
-		if((browrot & 0xFF) > 0xB)
+		else if((browrot & 0xFF) > 0xB)
 		return false;
-		if((browsize & 0xFF) > 0x8)
+		else if((browsize & 0xFF) > 0x8)
 		return false;
-		if((browidth & 0xFF) > 0x6)
+		else if((browidth & 0xFF) > 0x6)
 		return false;
-		if((eyepos & 0xFF) > 0x12)
+		else if((eyepos & 0xFF) > 0x12)
 		return false;
-		if((eyespace & 0xFF) > 0xC)
+		else if((eyespace & 0xFF) > 0xC)
 		return false;
-		if((eyerot & 0xFF) > 0x7)
+		else if((eyerot & 0xFF) > 0x7)
 		return false;
-		if((eyesize & 0xFF) > 0x7)
+		else if((eyesize & 0xFF) > 0x7)
 		return false;
-		if((eyewidth & 0xFF) > 0x6)
+		else if((eyewidth & 0xFF) > 0x6)
 		return false;
-		if((nosepos & 0xFF) > 0x12)
+		else if((nosepos & 0xFF) > 0x12)
 		return false;
-		if((nosesize & 0xFF) > 0x8)
+		else if((nosesize & 0xFF) > 0x8)
 		return false;
-		if((mouthpos & 0xFF) > 0x12)
+		else if((mouthpos & 0xFF) > 0x12)
 		return false;
-		if((mouthsize & 0xFF) > 0x8)
+		else if((mouthsize & 0xFF) > 0x8)
 		return false;
-		if((mouthwidth & 0xFF) > 0x6)
+		else if((mouthwidth & 0xFF) > 0x6)
 		return false;
-		if((glasspos & 0xFF) > 0x14)
+		else if((glasspos & 0xFF) > 0x14)
 		return false;
-		if((glassize & 0xFF) > 0x7)
+		else if((glassize & 0xFF) > 0x7)
 		return false;
-		if((stachepos & 0xFF) > 0x10)
+		else if((stachepos & 0xFF) > 0x10)
 		return false;
-		if((stachesize & 0xFF) > 0x8)
+		else if((stachesize & 0xFF) > 0x8)
 		return false;
-		if((molex & 0xFF) > 0x10)
+		else if((molex & 0xFF) > 0x10)
 		return false;
-		if((moley & 0xFF) > 0x1E)
+		else if((moley & 0xFF) > 0x1E)
 		return false;
-		if((molesize & 0xFF) > 0x8)
+		else if((molesize & 0xFF) > 0x8)
 		return false;
-		if((tall & 0xFF) > 0x7F)
+		else if((tall & 0xFF) > 0x7F)
 		return false;
-		if((wide & 0xFF) > 0x7F)
+		else if((wide & 0xFF) > 0x7F)
 		return false;
-		if (Process::Read8(share, val) && val == 0 && ReadNibble(gold, nibble, false) && nibble == 1)
+		else if (Process::Read8(share, val) && val == 0 && ReadNibble(gold, nibble, false) && nibble == 1)
 		return false;
 		
 	
