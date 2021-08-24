@@ -60,3 +60,16 @@ Mega menu:
 
 ![third](https://user-images.githubusercontent.com/32585652/117501182-8f293480-af32-11eb-9f87-b00b4ba6b9d3.png)
 ![fourth](https://user-images.githubusercontent.com/32585652/117501188-93555200-af32-11eb-87f3-a70f143657bf.png)
+
+JP/US/EU menu:
+
+![JPUSEU](https://user-images.githubusercontent.com/32585652/130695895-75d2d25c-03b3-4963-95b6-aac232aab580.png)
+
+CHN/TWN menu on the CHN version and on he TWN version:
+
+![CHNTWN](https://user-images.githubusercontent.com/32585652/130695992-10242923-a364-45d1-ba59-bce55d4a8a1b.png)
+![TWN](https://user-images.githubusercontent.com/32585652/130696044-32db5ee2-a9b1-4379-95ef-c5b648c34e92.png)
+
+KOR menu:
+
+![KOR](https://user-images.githubusercontent.com/32585652/130696091-d48ac080-61a7-4f96-afb0-2d9fbd8988c6.png)
