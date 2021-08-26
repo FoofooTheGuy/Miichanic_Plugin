@@ -53,8 +53,8 @@ Toggle theme
 # Screenshots:
 Dark theme (default) and Light theme (ugly)
 
-![first](https://user-images.githubusercontent.com/32585652/117500955-39548c80-af32-11eb-9475-a1c4fe72d9cd.png)
-![second](https://user-images.githubusercontent.com/32585652/117501040-61dc8680-af32-11eb-8665-d03606a2f9ac.png)
+![first](https://user-images.githubusercontent.com/32585652/130987833-675f510d-0dfe-4c21-964e-490167394066.png)
+![second](https://user-images.githubusercontent.com/32585652/130987860-290ce40d-830e-4aac-9eba-a7fd4b618530.png)
 
 Mega menu:
 
@@ -65,7 +65,7 @@ JP/US/EU menu:
 
 ![JPUSEU](https://user-images.githubusercontent.com/32585652/130695895-75d2d25c-03b3-4963-95b6-aac232aab580.png)
 
-CHN/TWN menu on the CHN version and on he TWN version:
+CHN/TWN menu on the CHN version and on the TWN version:
 
 ![CHNTWN](https://user-images.githubusercontent.com/32585652/130695992-10242923-a364-45d1-ba59-bce55d4a8a1b.png)
 ![TWN](https://user-images.githubusercontent.com/32585652/130696044-32db5ee2-a9b1-4379-95ef-c5b648c34e92.png)
