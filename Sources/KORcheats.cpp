@@ -143,8 +143,8 @@ namespace CTRPluginFramework
 		if (screen.IsTop && (*(u32 *)0x8AF73A4 == 0xB88C50) && (*(u16 *)0x88014D5 == 0))
 		{
 			if (Process::Read8(0x88014D4, val)) {
-			screen.Draw(Utils::Format("Mii Data Address: %8X", (0x17200 * val) + 0x8831C84), 0, 0, Color::Cyan);
-			screen.Draw(Utils::Format("Mii Data Address In Save (RAM): %8X", (0x5C * val) + 0x1488B7A8), 0, 10, Color::Cyan);
+			screen.Draw(Utils::Format("Mii Data Address: %X", (0x17200 * val) + 0x8831C84), 0, 0, Color::Cyan);
+			screen.Draw(Utils::Format("Mii Data Address In Save (RAM): %X", (0x5C * val) + 0x1488B7A8), 0, 10, Color::Cyan);
 			}
 		}
 		return true;
@@ -302,8 +302,9 @@ namespace CTRPluginFramework
 		{
 		if (Process::Read8(0x88014D4, val))
 		{
-		if (*(u32 *)0x8AF73A4 == 0xB88C50 && (*(u16 *)0x88014D5 == 0))
+		if (*(u32 *)0x8032218 != 0xFFFFFFFF && (*(u16 *)0x88014D5 == 0))
 		{
+			Sleep(Milliseconds(100));
 			KORoptKb->Populate(KORmegOpt);
 			switch (KORoptKb->Open())
 			{
@@ -439,18 +440,18 @@ namespace CTRPluginFramework
 			case 3://color (shares space with favorite) done
 			{
 			Sleep(Milliseconds(100));
-			KORcolorOpt.push_back(Color(red) << KORcolOpt[0]);
-			KORcolorOpt.push_back(Color(orange) << KORcolOpt[1]);
-			KORcolorOpt.push_back(Color(yellow) << KORcolOpt[2]);
-			KORcolorOpt.push_back(Color(lime) << KORcolOpt[3]);
-			KORcolorOpt.push_back(Color(green) << KORcolOpt[4]);
-			KORcolorOpt.push_back(Color(blue) << KORcolOpt[5]);
-			KORcolorOpt.push_back(Color(cyan) << KORcolOpt[6]);
-			KORcolorOpt.push_back(Color(pink) << KORcolOpt[7]);
-			KORcolorOpt.push_back(Color(purple) << KORcolOpt[8]);
-			KORcolorOpt.push_back(Color(brown) << KORcolOpt[9]);
-			KORcolorOpt.push_back(Color(white) << KORcolOpt[10]);
-			KORcolorOpt.push_back(Color(black) << KORcolOpt[11]);
+			KORcolorOpt.push_back(Color(Miired) << KORcolOpt[0]);
+			KORcolorOpt.push_back(Color(Miiorange) << KORcolOpt[1]);
+			KORcolorOpt.push_back(Color(Miiyellow) << KORcolOpt[2]);
+			KORcolorOpt.push_back(Color(Miilime) << KORcolOpt[3]);
+			KORcolorOpt.push_back(Color(Miigreen) << KORcolOpt[4]);
+			KORcolorOpt.push_back(Color(Miiblue) << KORcolOpt[5]);
+			KORcolorOpt.push_back(Color(Miicyan) << KORcolOpt[6]);
+			KORcolorOpt.push_back(Color(Miipink) << KORcolOpt[7]);
+			KORcolorOpt.push_back(Color(Miipurple) << KORcolOpt[8]);
+			KORcolorOpt.push_back(Color(Miibrown) << KORcolOpt[9]);
+			KORcolorOpt.push_back(Color(Miiwhite) << KORcolOpt[10]);
+			KORcolorOpt.push_back(Color(Miiblack) << KORcolOpt[11]);
 			
 			        Keyboard    keyboard("Pick a new color:", KORcolorOpt);
 					KORColChoice = keyboard.Open();
@@ -702,6 +703,11 @@ namespace CTRPluginFramework
 			};
 			}
 		}
+		}
+	}
+	void KORcallencrypt(MenuEntry *entry) {
+		if(Controller::IsKeysPressed(entry->Hotkeys[0].GetKeys())) {
+			KORencrypt();
 		}
 	}
 }

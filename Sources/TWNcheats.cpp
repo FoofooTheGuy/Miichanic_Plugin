@@ -143,8 +143,8 @@ namespace CTRPluginFramework
 		if (screen.IsTop && (*(u32 *)0x8AF73A4 == 0xB88C50) && (*(u16 *)0x88014D5 == 0))
 		{
 			if (Process::Read8(0x88014D4, val)) {
-			screen.Draw(Utils::Format("Mii Data Address: %8X", (0x17200 * val) + 0x8831C84), 0, 0, Color::Cyan);
-			screen.Draw(Utils::Format("Mii Data Address In Save (RAM): %8X", (0x5C * val) + 0x1488B928), 0, 10, Color::Cyan);
+			screen.Draw(Utils::Format("Mii Data Address: %X", (0x17200 * val) + 0x8831C84), 0, 0, Color::Cyan);
+			screen.Draw(Utils::Format("Mii Data Address In Save (RAM): %X", (0x5C * val) + 0x1488B928), 0, 10, Color::Cyan);
 			}
 		}
 		return true;
@@ -304,6 +304,7 @@ namespace CTRPluginFramework
 		{
 		if (*(u32 *)0x8AF73A4 == 0xB88C50 && (*(u16 *)0x88014D5 == 0))
 		{
+			Sleep(Milliseconds(100));
 			TWNoptKb->Populate(TWNmegOpt);
 			switch (TWNoptKb->Open())
 			{
@@ -440,18 +441,18 @@ namespace CTRPluginFramework
 			case 3://color (shares space with favorite) done
 			{
 			Sleep(Milliseconds(100));
-			TWNcolorOpt.push_back(Color(red) << TWNcolOpt[0]);
-			TWNcolorOpt.push_back(Color(orange) << TWNcolOpt[1]);
-			TWNcolorOpt.push_back(Color(yellow) << TWNcolOpt[2]);
-			TWNcolorOpt.push_back(Color(lime) << TWNcolOpt[3]);
-			TWNcolorOpt.push_back(Color(green) << TWNcolOpt[4]);
-			TWNcolorOpt.push_back(Color(blue) << TWNcolOpt[5]);
-			TWNcolorOpt.push_back(Color(cyan) << TWNcolOpt[6]);
-			TWNcolorOpt.push_back(Color(pink) << TWNcolOpt[7]);
-			TWNcolorOpt.push_back(Color(purple) << TWNcolOpt[8]);
-			TWNcolorOpt.push_back(Color(brown) << TWNcolOpt[9]);
-			TWNcolorOpt.push_back(Color(white) << TWNcolOpt[10]);
-			TWNcolorOpt.push_back(Color(black) << TWNcolOpt[11]);
+			TWNcolorOpt.push_back(Color(Miired) << TWNcolOpt[0]);
+			TWNcolorOpt.push_back(Color(Miiorange) << TWNcolOpt[1]);
+			TWNcolorOpt.push_back(Color(Miiyellow) << TWNcolOpt[2]);
+			TWNcolorOpt.push_back(Color(Miilime) << TWNcolOpt[3]);
+			TWNcolorOpt.push_back(Color(Miigreen) << TWNcolOpt[4]);
+			TWNcolorOpt.push_back(Color(Miiblue) << TWNcolOpt[5]);
+			TWNcolorOpt.push_back(Color(Miicyan) << TWNcolOpt[6]);
+			TWNcolorOpt.push_back(Color(Miipink) << TWNcolOpt[7]);
+			TWNcolorOpt.push_back(Color(Miipurple) << TWNcolOpt[8]);
+			TWNcolorOpt.push_back(Color(Miibrown) << TWNcolOpt[9]);
+			TWNcolorOpt.push_back(Color(Miiwhite) << TWNcolOpt[10]);
+			TWNcolorOpt.push_back(Color(Miiblack) << TWNcolOpt[11]);
 			
 			        Keyboard    keyboard("Pick a new color:", TWNcolorOpt);
 					TWNColChoice = keyboard.Open();
@@ -668,7 +669,7 @@ namespace CTRPluginFramework
 				MessageBox("This Mii is now your personal Mii!\n(Reload and save to make changes)")();
 				break;
 			};
-			case 10://delete done
+			case 10:
 			{
 				Sleep(Milliseconds(100));
 				TWNdeloptKb->Populate(TWNdelOpt);
@@ -703,6 +704,11 @@ namespace CTRPluginFramework
 			};
 			}
 		}
+		}
+	}
+	void TWNcallencrypt(MenuEntry *entry) {
+		if(Controller::IsKeysPressed(entry->Hotkeys[0].GetKeys())) {
+			TWNencrypt();
 		}
 	}
 }

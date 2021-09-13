@@ -306,8 +306,8 @@ void ReplaceSTR(std::string &str, const std::string &oldSTR, const std::string &
 		if (screen.IsTop && (*(u32 *)0x88B2B28 != 0xFFFFFFFF) && (*(u16 *)0x88014D5 == 0))
 		{
 			if (Process::Read8(0x88014D4, val)) {
-			screen.Draw(Utils::Format("Mii Data Address: %8X", (0x17200 * val) + 0x883A910), 0, 0, Color::Cyan);
-			screen.Draw(Utils::Format("Mii Data Address in Save (RAM): %8X", (0x5C * val) + 0x14895A28), 0, 10, Color::Cyan);
+			screen.Draw(Utils::Format("Mii Data Address: %X", (0x17200 * val) + 0x883A910), 0, 0, Color::Cyan);
+			screen.Draw(Utils::Format("Mii Data Address in Save (RAM): %X", (0x5C * val) + 0x14895A28), 0, 10, Color::Cyan);
 			}
 		}
 		return true;
@@ -439,6 +439,19 @@ void ReplaceSTR(std::string &str, const std::string &oldSTR, const std::string &
 			return "black";
 		else return "";
 	}
+void erase(std::vector<std::string>& v, std::string str)
+{
+    std::vector<std::string>::iterator iter = v.begin();
+
+     while (iter != v.end())
+    {
+            if(*iter == str)
+                  iter = v.erase(iter);
+            else
+                  iter++;
+    }
+
+}
 
 	std::vector<std::string> megOpt{
 		"Change name...",
@@ -511,6 +524,7 @@ void ReplaceSTR(std::string &str, const std::string &oldSTR, const std::string &
 		{
 		if (*(u32 *)0x88B2B28 != 0xFFFFFFFF && (*(u16 *)0x88014D5 == 0))
 		{
+			Sleep(Milliseconds(100));
 			optKb->Populate(megOpt);
 			switch (optKb->Open())
 			{
@@ -647,18 +661,18 @@ void ReplaceSTR(std::string &str, const std::string &oldSTR, const std::string &
 			case 3://color (shares space with favorite)
 			{
 			Sleep(Milliseconds(100));
-			colorOpt.push_back(Color(red) << colOpt[0]);
-			colorOpt.push_back(Color(orange) << colOpt[1]);
-			colorOpt.push_back(Color(yellow) << colOpt[2]);
-			colorOpt.push_back(Color(lime) << colOpt[3]);
-			colorOpt.push_back(Color(green) << colOpt[4]);
-			colorOpt.push_back(Color(blue) << colOpt[5]);
-			colorOpt.push_back(Color(cyan) << colOpt[6]);
-			colorOpt.push_back(Color(pink) << colOpt[7]);
-			colorOpt.push_back(Color(purple) << colOpt[8]);
-			colorOpt.push_back(Color(brown) << colOpt[9]);
-			colorOpt.push_back(Color(white) << colOpt[10]);
-			colorOpt.push_back(Color(black) << colOpt[11]);
+			colorOpt.push_back(Color(Miired) << colOpt[0]);
+			colorOpt.push_back(Color(Miiorange) << colOpt[1]);
+			colorOpt.push_back(Color(Miiyellow) << colOpt[2]);
+			colorOpt.push_back(Color(Miilime) << colOpt[3]);
+			colorOpt.push_back(Color(Miigreen) << colOpt[4]);
+			colorOpt.push_back(Color(Miiblue) << colOpt[5]);
+			colorOpt.push_back(Color(Miicyan) << colOpt[6]);
+			colorOpt.push_back(Color(Miipink) << colOpt[7]);
+			colorOpt.push_back(Color(Miipurple) << colOpt[8]);
+			colorOpt.push_back(Color(Miibrown) << colOpt[9]);
+			colorOpt.push_back(Color(Miiwhite) << colOpt[10]);
+			colorOpt.push_back(Color(Miiblack) << colOpt[11]);
 			
 			        Keyboard    keyboard("Pick a new color:", colorOpt);
 					ColChoice = keyboard.Open();
@@ -894,7 +908,7 @@ void ReplaceSTR(std::string &str, const std::string &oldSTR, const std::string &
 							{
 								if(Process::ReadString((0x5C * val) + (0x14895A20 + 0x22), finame, 20, StringFormat::Utf16))
 								{
-								for (int i = 0; i < 92; i+=4)
+								for (int i = 0; i <= 92; i+=4)
 								{
 								Process::Write32((0x5C * val) + (0x14895A28 + i), 0);
 								}
@@ -910,6 +924,11 @@ void ReplaceSTR(std::string &str, const std::string &oldSTR, const std::string &
 			};
 			}
 		}
+		}
+	}
+	void callencrypt(MenuEntry *entry) {
+		if(Controller::IsKeysPressed(entry->Hotkeys[0].GetKeys())) {
+			encrypt();
 		}
 	}
 }
