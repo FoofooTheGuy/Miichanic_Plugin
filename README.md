@@ -19,6 +19,8 @@ Restore save file
 
 Mega menu
 
+Create Mii QR code
+
 # Mega menu contains:
 
 Change name
