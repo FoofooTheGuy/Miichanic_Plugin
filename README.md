@@ -52,6 +52,8 @@ Delete Mii
 Useless OSD
 
 Toggle theme
+
+Exit to home menu
 # Screenshots:
 Dark theme (default) and Light theme (ugly)
 
