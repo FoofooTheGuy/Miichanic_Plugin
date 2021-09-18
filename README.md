@@ -65,6 +65,10 @@ Mega menu:
 ![third](https://user-images.githubusercontent.com/32585652/117501182-8f293480-af32-11eb-9f87-b00b4ba6b9d3.png)
 ![fourth](https://user-images.githubusercontent.com/32585652/117501188-93555200-af32-11eb-87f3-a70f143657bf.png)
 
+Change Favorite color:
+
+![ChangeColor](https://user-images.githubusercontent.com/32585652/133910032-470f58b3-5c04-442c-a9d7-04b0fc8f6ea0.png)
+
 JP/US/EU menu:
 
 ![JPUSEU](https://user-images.githubusercontent.com/32585652/130695895-75d2d25c-03b3-4963-95b6-aac232aab580.png)
