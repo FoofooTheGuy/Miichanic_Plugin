@@ -16,7 +16,7 @@ echo.
 echo.
 echo.Step 1: Drag and drop the .3gx file into this terminal and then press Enter:
 echo.
-set /p File=%1
+set /p File=
 echo.
 echo.Step 2: Select the region you want to install the plugin for,
 echo.or quit the installation:
