@@ -3,41 +3,18 @@
 
 void    abort(void);
 
+extern "C" void _ZN18CTRPluginFramework10SearchMenu12ProcessEventERSt6vectorINS_5EventESaIS2_EERNS_4TimeE();
+
 namespace CTRPluginFramework
 {
-    static void    ToggleTouchscreenForceOn(void)
-    {
-        static u32 original = 0;
-        static u32 *patchAddress = nullptr;
 
-        if (patchAddress && original)
-        {
-            *patchAddress = original;
-            return;
-        }
-
-        static const std::vector<u32> pattern =
-        {
-            0xE59F10C0, 0xE5840004, 0xE5841000, 0xE5DD0000,
-            0xE5C40008, 0xE28DD03C, 0xE8BD80F0, 0xE5D51001,
-            0xE1D400D4, 0xE3510003, 0x159F0034, 0x1A000003
-        };
-
-        Result  res;
-        Handle  processHandle;
-        s64     textTotalSize = 0;
-        s64     startAddress = 0;
-        u32 *   found;
-
-
-        svcUnmapProcessMemory(CUR_PROCESS_HANDLE, 0x14000000, textTotalSize);
-exit:
-        svcCloseHandle(processHandle);
-    }
-
+    // This function is called before main and before the game starts
+    // Useful to do code edits safely
     void    PatchProcess(FwkSettings &settings)
     {
-        ToggleTouchscreenForceOn();
+			*(u32*)((u32)(_ZN18CTRPluginFramework10SearchMenu12ProcessEventERSt6vectorINS_5EventESaIS2_EERNS_4TimeE)
+			+ 0xB4) = 0xE1A00000;
+
 	    settings.AllowSearchEngine = true;
         settings.AllowActionReplay = true;
         settings.WaitTimeToBoot = Time(Seconds(5));
@@ -106,7 +83,7 @@ exit:
 	{
 		if (Process::GetTitleID() == TID_JPN || Process::GetTitleID() == TID_USA || Process::GetTitleID() == TID_EUR)
 		{
-			PluginMenu *menu = new PluginMenu("Miichanic's Tool Box (JP/US/EU)", 0, 5, 2, "A set of cheats for 3DS Mii Maker made by Foofoo\n\nyoutube.com/c/foofooanimations");
+			PluginMenu *menu = new PluginMenu("Miichanic's Tool Box (JP/US/EU)", 0, 6, 0, "A set of cheats for 3DS Mii Maker made by Foofoo\n\nyoutube.com/c/foofooanimations");
 			menu->SynchronizeWithFrame(true);
 			
 			const std::vector<MenuEntry *> JPUSEUeditorEntries{
@@ -131,9 +108,9 @@ exit:
 			menu->Run();
 			delete menu;
 		}
-		if (Process::GetTitleID() == TID_CHN || Process::GetTitleID() == TID_TWN)
+		else if (Process::GetTitleID() == TID_CHN || Process::GetTitleID() == TID_TWN)
 		{
-			PluginMenu *menu = new PluginMenu("Miichanic's Tool Box (CHN/TWN)", 0, 5, 2, "A set of cheats for 3DS Mii Studio made by Foofoo\n\nyoutube.com/c/foofooanimations");
+			PluginMenu *menu = new PluginMenu("Miichanic's Tool Box (CHN/TWN)", 0, 6, 0, "A set of cheats for 3DS Mii Studio made by Foofoo\n\nyoutube.com/c/foofooanimations");
 			menu->SynchronizeWithFrame(true);
 			
 			const std::vector<MenuEntry *> TWNeditorEntries{
@@ -158,9 +135,9 @@ exit:
 			menu->Run();
 			delete menu;
 		}
-		if (Process::GetTitleID() == TID_KOR)
+		else if (Process::GetTitleID() == TID_KOR)
 		{
-			PluginMenu *menu = new PluginMenu("Miichanic's Tool Box (KOR)", 0, 5, 2, "A set of cheats for 3DS Mii Studio made by Foofoo\n\nyoutube.com/c/foofooanimations");
+			PluginMenu *menu = new PluginMenu("Miichanic's Tool Box (KOR)", 0, 6, 0, "A set of cheats for 3DS Mii Studio made by Foofoo\n\nyoutube.com/c/foofooanimations");
 			menu->SynchronizeWithFrame(true);
 			
 			const std::vector<MenuEntry *> KOReditorEntries{
