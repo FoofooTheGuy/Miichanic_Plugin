@@ -452,7 +452,7 @@ bool ConvertString(u32 address, const char* input, size_t size, StringFormat for
 		}
 		buf[0x18] = isGirl + (month << 1) + ((day & 7) << 5);
 		buf[0x19] = (day >> 3) + (favColor << 2) + (isFavorite << 6);
-		buf[0x30] = sharing + (faceShape << 1) + (skinColor << 5);
+		buf[0x30] = !sharing + (faceShape << 1) + (skinColor << 5);
 	}
 
 	std::size_t strlen(const std::string& str) {//http://www.cplusplus.com/forum/beginner/192031/#msg925794
@@ -600,10 +600,7 @@ bool ConvertString(u32 address, const char* input, size_t size, StringFormat for
 				creatorMAC.push_back(buf[0x10 + i]);
 			}
 			Process::ReadString((0x5C * val) + DATA_ADDR + 0x1A, Miiname, NAME_LENGTH, StringFormat::Utf16);
-			int notsharing = ~(buf[0x30] & 1);
-			if (notsharing == -1)
-				notsharing = 0;
-			else notsharing = 1;
+			int sharing = !(buf[0x30] & 1);
 			int faceShape = (buf[0x30] >> 1) & 0xF;
 			int skinColor = buf[0x30] >> 5;
 			if (miiID[0] & 0x80) {
@@ -623,7 +620,7 @@ bool ConvertString(u32 address, const char* input, size_t size, StringFormat for
 			if(isFavorite)
 				enableColor.push_back(Color::Lime << megOpt[5]);
 			else enableColor.push_back(Color::Red << megOpt[5]);
-			if(!notsharing)
+			if(sharing)
 				enableColor.push_back(Color::Lime << megOpt[6]);
 			else enableColor.push_back(Color::Red << megOpt[6]);
 			if(allowcopying)
@@ -798,16 +795,16 @@ bool ConvertString(u32 address, const char* input, size_t size, StringFormat for
 				}
 			}
 			if (Choiche == 6) {//sharing
-				if (notsharing) {
-					notsharing = false;
+				if (sharing) {
+					sharing = false;
+				Sleep(Milliseconds(100));
+				MessageBox(Miiname << " is no longer shareable!\n(Reload and save to make changes)")();
+				}
+				else {
+					sharing = true;
 					miiID[0] |= 0x80;
 				Sleep(Milliseconds(100));
 				MessageBox(Miiname << " is now shareable!\n(Reload and save to make changes)")();
-				}
-				else {
-					notsharing = true;
-				Sleep(Milliseconds(100));
-				MessageBox(Miiname << " is no longer shareable!\n(Reload and save to make changes)")();
 				}
 			}
 			if (Choiche == 7) {//copying
@@ -825,7 +822,7 @@ bool ConvertString(u32 address, const char* input, size_t size, StringFormat for
 			if (Choiche == 8) {//golden man, take me by the hand lead me to the land that you understand
 				if (miiID[0] & 0x80) {
 					miiID[0] &= 0x7f;
-					notsharing = true;
+					sharing = false;
 				Sleep(Milliseconds(100));
 				MessageBox(Miiname << " is now specialized!\n(Reload and save to make changes)")();
 				}
@@ -887,7 +884,7 @@ bool ConvertString(u32 address, const char* input, size_t size, StringFormat for
 			}
 		for (int i = 2; i <= 8; i++)
 			if (Choiche == i) {
-			miiEncode(buf, allowcopying, profanityflag, regionlock, characterset, pageindex, slotindex, version, isGirl, month, day, favColor, isFavorite, notsharing, faceShape, skinColor, miiID, creatorMAC);
+			miiEncode(buf, allowcopying, profanityflag, regionlock, characterset, pageindex, slotindex, version, isGirl, month, day, favColor, isFavorite, sharing, faceShape, skinColor, miiID, creatorMAC);
 			for (int i = 0; i <= 92; i++)
 			{
 				Process::Write8((0x5C * val) + DATA_ADDR + i, buf.at(i));
