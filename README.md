@@ -1,6 +1,40 @@
 # Miichanic_Plugin
 A Luma3DS plugin for the Title Mii Maker that uses CTRPF 0.7.0 and supports every region.
 
+# Installation guide:
+(You will need to first install Custom Firmware to use this plugin)
+
+Method 1 (Assisted installation using a Windows PC):
+---
+- Turn off your console and put your SD card into your computer
+
+If you use a Windows PC, then you can install the plugin by running the Install.bat file, and following the instructions in the command prompt.
+
+Method 2 (Manual installation):
+---
+- Turn off your console and put your SD card into your computer
+- First download the boot.firm file for [Luma3DS 3GX Loader Edition](https://github.com/Nanquitas/Luma3DS/releases/latest) and
+replace the boot.firm on your SD card root with that one.
+- Next create a folder called "plugins" (without quotes) in the luma folder that is in your SD card root (SD:/luma/plugins/)
+- Then create a folder corresponding to your game title ID in the plugins folder:
+
+Japan: SD:/luma/plugins/0004001000020700/
+
+USA: SD:/luma/plugins/0004001000021700/
+
+Europe: SD:/luma/plugins/0004001000022700/
+
+China: SD:/luma/plugins/0004001000026700/
+
+Korea: SD:/luma/plugins/0004001000027700/
+
+Taiwan: SD:/luma/plugins/0004001000028700/
+
+- Place Miichanic.3gx in that folder (E.g. SD:/luma/plugins/0004001000020700/Miichanic.3gx)
+- Finally, put your SD card back into your console and open the rosalina menu (L + D-pad down + select by default) and enable the plugin loader (4th option)
+- Launch Mii maker, and the screen will flash a light blue color and the message "Plugin ready!" shall appear soon after.
+
+Press select to open the menu.
 # Features:
 
 # (Directory for Editor codes)
