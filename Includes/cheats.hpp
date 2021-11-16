@@ -34,6 +34,9 @@ namespace CTRPluginFramework
 	std::vector<size_t> GetSubstrIndexList(std::string &str, std::string indexOf);
 	void ReplaceSTR(std::string &str, const std::string &oldSTR, const std::string &newSTR, int substrIndex);
 	std::string colorcolor(int pick);
+	void miiEncode(std::vector <u8> &buf, int allowCopying, int profanityFlag, int regionLock, int characterSet, int pageIndex, int slotIndex, int version, int isGirl, int month, int day, int favColor, int isFavorite, int sharing, int faceShape, int skinColor, std::vector<int> miiID, std::vector<int> creatorMAC);
+	bool ConvertString(u32 address, const char* input, size_t size, StringFormat format);
+	std::size_t strlen(const std::string& str);
 	//QR HELPERS
 	typedef u8 DecMii[0x60];
 	typedef u8 EncMii[0x70];
@@ -41,7 +44,6 @@ namespace CTRPluginFramework
 	#define MII_DECSIZE 0x60
 	int encryptMii(DecMii *data, const char* outputFile);
 	Result APT_Wrap(u32 outputSize, u32 inputSize, u32 blockSize, u32 nonceSize, void* input, void* output);
-	void erase(std::vector<std::string>& v, std::string str);
 	void encrypt(void);
 	void KORencrypt(void);
 	void TWNencrypt(void);
@@ -61,7 +63,6 @@ namespace CTRPluginFramework
 	void TWNcopymii(MenuEntry *entry);
 	void TWNdumpsave(MenuEntry *entry);
 	void TWNrestoresave(MenuEntry *entry);
-	void TWNmegamenu(MenuEntry *entry);
 	void TWNcallencrypt(MenuEntry *entry);
 	//KOR
 	void KORnamedit(MenuEntry *entry);
@@ -69,7 +70,6 @@ namespace CTRPluginFramework
 	void KORcopymii(MenuEntry *entry);
 	void KORdumpsave(MenuEntry *entry);
 	void KORrestoresave(MenuEntry *entry);
-	void KORmegamenu(MenuEntry *entry);
 	void KORcallencrypt(MenuEntry *entry);
 }
 #endif
