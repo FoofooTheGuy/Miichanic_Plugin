@@ -83,7 +83,7 @@ namespace CTRPluginFramework
 	{
 		if (Process::GetTitleID() == TID_JPN || Process::GetTitleID() == TID_USA || Process::GetTitleID() == TID_EUR)
 		{
-			PluginMenu *menu = new PluginMenu("Miichanic's Tool Box (JP/US/EU)", 0, 6, 0, "A set of cheats for 3DS Mii Maker made by Foofoo\n\nyoutube.com/c/foofooanimations");
+			PluginMenu *menu = new PluginMenu("Miichanic's Tool Box (JP/US/EU)", 0, 6, 1, "A set of cheats for 3DS Mii Maker made by Foofoo\n\nyoutube.com/c/foofooanimations");
 			menu->SynchronizeWithFrame(true);
 			
 			const std::vector<MenuEntry *> JPUSEUeditorEntries{
@@ -110,7 +110,7 @@ namespace CTRPluginFramework
 		}
 		else if (Process::GetTitleID() == TID_CHN || Process::GetTitleID() == TID_TWN)
 		{
-			PluginMenu *menu = new PluginMenu("Miichanic's Tool Box (CHN/TWN)", 0, 6, 0, "A set of cheats for 3DS Mii Studio made by Foofoo\n\nyoutube.com/c/foofooanimations");
+			PluginMenu *menu = new PluginMenu("Miichanic's Tool Box (CHN/TWN)", 0, 6, 1, "A set of cheats for 3DS Mii Studio made by Foofoo\n\nyoutube.com/c/foofooanimations");
 			menu->SynchronizeWithFrame(true);
 			
 			const std::vector<MenuEntry *> TWNeditorEntries{
@@ -121,7 +121,7 @@ namespace CTRPluginFramework
 			const std::vector<MenuEntry *> TWNsaveEntries{
 			new MenuEntry("Dump save file", nullptr, TWNdumpsave, "Backup your save file!\nDumps are stored in: SD:Miichanic/CFL_DB.dat"),
 			new MenuEntry("Restore save file", nullptr, TWNrestoresave),
-			EntryWithHotkey(new MenuEntry("mega menu", TWNmegamenu, "tap on a mii and press the hotkeys, it can't do everything, but it's useful."), { Hotkey(Key::A | Key::DPadRight, "Open menu")}),
+			EntryWithHotkey(new MenuEntry("mega menu", megamenu, "tap on a mii and press the hotkeys, it can't do everything, but it's useful."), { Hotkey(Key::A | Key::DPadRight, "Open menu")}),
 			EntryWithHotkey(new MenuEntry("Create Mii QR code (Read Note)", TWNcallencrypt, "WARNING: This cheat is unstable and might freeze the game. make sure you save before using it!\n\nThis creates a QR Code of the mii you're selecting.\nMake sure that your screen is bright enough if you are scanning it from your screen!\nThanks to Goombi and Redshyguy for their code"), { Hotkey(Key::A | Key::B, "run it")}),
 			};
 			
@@ -137,7 +137,7 @@ namespace CTRPluginFramework
 		}
 		else if (Process::GetTitleID() == TID_KOR)
 		{
-			PluginMenu *menu = new PluginMenu("Miichanic's Tool Box (KOR)", 0, 6, 0, "A set of cheats for 3DS Mii Studio made by Foofoo\n\nyoutube.com/c/foofooanimations");
+			PluginMenu *menu = new PluginMenu("Miichanic's Tool Box (KOR)", 0, 6, 1, "A set of cheats for 3DS Mii Studio made by Foofoo\n\nyoutube.com/c/foofooanimations");
 			menu->SynchronizeWithFrame(true);
 			
 			const std::vector<MenuEntry *> KOReditorEntries{
@@ -148,7 +148,7 @@ namespace CTRPluginFramework
 			const std::vector<MenuEntry *> KORsaveEntries{
 			new MenuEntry("Dump save file", nullptr, KORdumpsave, "Backup your save file!\nDumps are stored in: SD:Miichanic/CFL_DB.dat"),
 			new MenuEntry("Restore save file", nullptr, KORrestoresave),
-			EntryWithHotkey(new MenuEntry("mega menu", KORmegamenu, "tap on a mii and press the hotkeys, it can't do everything, but it's useful."), { Hotkey(Key::A | Key::DPadRight, "Open menu")}),
+			EntryWithHotkey(new MenuEntry("mega menu", megamenu, "tap on a mii and press the hotkeys, it can't do everything, but it's useful."), { Hotkey(Key::A | Key::DPadRight, "Open menu")}),
 			EntryWithHotkey(new MenuEntry("Create Mii QR code (Read Note)", KORcallencrypt, "WARNING: This cheat is unstable and might freeze the game. make sure you save before using it!\n\nThis creates a QR Code of the mii you're selecting.\nMake sure that your screen is bright enough if you are scanning it from your screen!\nThanks to Goombi and Redshyguy for their code"), { Hotkey(Key::A | Key::B, "run it")}),
 			};
 			
