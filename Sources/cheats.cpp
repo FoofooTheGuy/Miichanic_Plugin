@@ -545,15 +545,17 @@ bool ConvertString(u32 address, const char* input, size_t size, StringFormat for
 	
 	void megamenu(MenuEntry *entry)
 	{
-		u32 DATA_ADDR;
+		u32 DATA_ADDR = 0;
 		switch (Process::GetTitleID()) {
 			case TID_JPN:
 			case TID_USA:
 			case TID_EUR:
 				DATA_ADDR = 0x14895A28;
+				break;
 			case TID_CHN:
 			case TID_TWN:
 				DATA_ADDR = 0x1488B928;
+				break;
 			case TID_KOR:
 				DATA_ADDR = 0x1488B7A8;
 			break;
