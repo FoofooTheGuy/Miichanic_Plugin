@@ -8,7 +8,9 @@ Method 1 (Assisted installation using a Windows PC):
 ---
 - Turn off your console and put your SD card into your computer
 
-If you use a Windows PC, then you can install the plugin by running the Install.bat file, and following the instructions in the command prompt.
+- If you use a Windows PC, then you can install the plugin by running the Install.bat file, and following the instructions in the command prompt.
+- After that, put your SD card back into your console and open the rosalina menu (L + D-pad down + select by default) and enable the plugin loader (4th option)
+- Launch Mii maker, and the screen will flash a light blue color and the message "Plugin ready!" shall appear soon after.
 
 Method 2 (Manual installation):
 ---
