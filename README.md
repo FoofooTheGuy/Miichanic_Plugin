@@ -65,6 +65,8 @@ Toggle gender
 
 Change favorite color
 
+Change birth day
+
 Toggle favorite
 
 Toggle sharing
@@ -96,8 +98,7 @@ Dark theme (default) and Light theme (ugly)
 
 Mega menu:
 
-![third](https://user-images.githubusercontent.com/32585652/117501182-8f293480-af32-11eb-9f87-b00b4ba6b9d3.png)
-![fourth](https://user-images.githubusercontent.com/32585652/117501188-93555200-af32-11eb-87f3-a70f143657bf.png)
+![megalong](https://user-images.githubusercontent.com/32585652/145294918-89fb4220-dbbb-4a4a-a785-fa4874113009.png)
 
 Change Favorite color:
 
