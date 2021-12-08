@@ -97,6 +97,7 @@ Dark theme (default) and Light theme (ugly)
 ![second](https://user-images.githubusercontent.com/32585652/130987860-290ce40d-830e-4aac-9eba-a7fd4b618530.png)
 
 Mega Menu:
+
 ![megalong](https://user-images.githubusercontent.com/32585652/145294918-89fb4220-dbbb-4a4a-a785-fa4874113009.png)
 
 Change Favorite color:
