@@ -9,5 +9,6 @@ I also took many examples and functions from the internet, so I apologize if I f
 - Provided are the most important parts of the program, (main.cpp and dirent.h) instead of uploading the entire project.
 
 Usage example:
+---
 
 ![usage](https://user-images.githubusercontent.com/32585652/149185461-83fde09f-c460-48ee-8584-55600c39a433.PNG)
