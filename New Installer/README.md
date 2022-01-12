@@ -1,6 +1,6 @@
 # Miichanic's Tool Box Installer 2.00
 
-An internet connection is required for the app to download the required files! (Miichanic.3gx and boot.firm)
+An internet connection is required for the program to download the required files! (Miichanic.3gx and boot.firm)
 ---
 
 - This is an installer for the Miichanic plugin made using WinAPI and Microsoft Visual Studio 2022.
