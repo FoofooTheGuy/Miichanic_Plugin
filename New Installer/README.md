@@ -4,7 +4,7 @@ An internet connection is required for the app to download the required files! (
 ---
 
 - This is an installer for the Miichanic plugin made using WinAPI and Microsoft Visual Studio 2022.
-I also took many examples and functions from the internet, so I apologize if I forgot to link something from some website...
+I also took many examples and functions from the internet, so I apologize if I forgot to link something that i found on some website...
 
 - It is nicer than the old batch file version by doing many more things automatically!
 
