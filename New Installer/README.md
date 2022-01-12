@@ -8,7 +8,7 @@ I also took many examples and functions from the internet, so I apologize if I f
 
 - It is nicer than the old batch file version by doing many more things automatically!
 
-- Provided are the most important parts of the program (main.cpp and dirent.h), instead of uploading the entire project.
+- Provided are the most important parts of the program, (main.cpp and dirent.h) instead of uploading the entire project.
 
 Usage example:
 
