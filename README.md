@@ -21,7 +21,7 @@ Method 2 (Manual installation):
 - Turn off your console and put your SD card into your computer
 - First download the boot.firm file for [Luma3DS 3GX Loader Edition](https://github.com/Nanquitas/Luma3DS/releases/latest) and
 replace the boot.firm on your SD card root with that one.
-- Next create a folder called "plugins" (without quotes) in the luma folder that is in your SD card root (SD:/luma/plugins/)
+- Next create a folder called "plugins" (without quotes) in the luma folder that is on your SD card root (SD:/luma/plugins/)
 - Then create a folder corresponding to your game title ID in the plugins folder:
 
 Japan: SD:/luma/plugins/0004001000020700/
@@ -36,7 +36,7 @@ Korea: SD:/luma/plugins/0004001000027700/
 
 Taiwan: SD:/luma/plugins/0004001000028700/
 
-- Place Miichanic.3gx in that folder (E.g. SD:/luma/plugins/0004001000020700/Miichanic.3gx)
+- Place [Miichanic.3gx](https://github.com/FoofooTheGuy/Miichanic_Plugin/releases/latest/download/Miichanic.3gx) in that folder (E.g. SD:/luma/plugins/0004001000020700/Miichanic.3gx)
 - Finally, put your SD card back into your console and open the rosalina menu (L + D-pad down + select by default) and enable the plugin loader (4th option)
 - Launch Mii maker, and the screen will flash a light blue color and the message "Plugin ready!" shall appear soon after.
 
