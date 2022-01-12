@@ -12,7 +12,7 @@ Method 1 (Assisted installation using a Windows PC):
 ---
 - Turn off your console and put your SD card into your computer
 
-- If you use a Windows PC (Windows 7 and above), then you can install the plugin by running the [Miichanics-Tool-Box-Installer](https://github.com/FoofooTheGuy/Miichanic_Plugin/releases/latest/download/Miichanics-Tool-Box-Installer.exe) file, and following the instructions there.
+- If you use a Windows PC, (Windows 7 and above), then you can install the plugin by running the [Miichanics-Tool-Box-Installer](https://github.com/FoofooTheGuy/Miichanic_Plugin/releases/latest/download/Miichanics-Tool-Box-Installer.exe) file, and following the instructions there.
 - After that, put your SD card back into your console and open the rosalina menu (L + D-pad down + select by default) and enable the plugin loader (4th option)
 - Launch Mii maker, and the screen will flash a light blue color and the message "Plugin ready!" shall appear soon after.
 
