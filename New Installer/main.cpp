@@ -14,7 +14,8 @@
 // Header needed for unicode adjustment support
 #include <tchar.h>
 #include "dirent.h"
-#include<urlmon.h>
+//Header for downloading files
+#include <urlmon.h>
 #pragma comment (lib,"urlmon.lib")
 #pragma comment(lib, "comctl32.lib")
 #pragma comment(linker,"\"/manifestdependency:type='win32' \
