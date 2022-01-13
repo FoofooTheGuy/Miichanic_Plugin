@@ -14,8 +14,7 @@
 // Header needed for unicode adjustment support
 #include <tchar.h>
 #include "dirent.h"
-//Header for downloading files
-#include <urlmon.h>
+#include<urlmon.h>
 #pragma comment (lib,"urlmon.lib")
 #pragma comment(lib, "comctl32.lib")
 #pragma comment(linker,"\"/manifestdependency:type='win32' \
@@ -26,10 +25,10 @@ processorArchitecture='*' publicKeyToken='6595b64144ccf1df' language='*'\"")
 // Global variables
 
 // The main window class name.
-static TCHAR szWindowClass[] = _T("MiichanicToolBoxInstaller");
+static TCHAR szWindowClass[] = _T("MiichanicToolBoxInstaller");//class name, make this your own
 
 // The string that appears in the application's title bar.
-static TCHAR szTitle[] = _T("Miichanic's Tool Box Installer v2.00");
+static TCHAR szTitle[] = _T("Miichanic's Tool Box Installer v2.00");//title name, make this your own
 
 HINSTANCE hInst;
 
@@ -144,7 +143,7 @@ int WINAPI WinMain(
     {
         MessageBox(NULL,
             _T("Call to RegisterClassEx failed!"),
-            _T("Miichanic Installer"),
+            _T("Error"),
             NULL);
 
         return 1;
@@ -181,7 +180,7 @@ int WINAPI WinMain(
     {
         MessageBox(NULL,
             _T("Call to CreateWindow failed!"),
-            _T("Miichanic Installer"),
+            _T("Error"),
             NULL);
 
         return 1;
@@ -210,7 +209,7 @@ HWND item1, item2, item3, item4, item5, item6, item7, item8, item9, item10, item
 int page = 0;//page index
 std::string realdir;//drive to install to
 
-bool Region[6] = {
+bool Region[6] = {//maybe remove some of these, meh
     false,//jpn (0)
     false,//usa (1)
     false,//eur (2)
@@ -249,6 +248,18 @@ void enableAll() {
 //  WM_DESTROY  - post a quit message and return
 LRESULT CALLBACK WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
+    //edit this stuff
+    std::string TIDJPN = "0004001000020700";
+    std::string TIDUSA = "0004001000021700";
+    std::string TIDEUR = "0004001000022700";
+    std::string TIDCHN = "0004001000026700";
+    std::string TIDKOR = "0004001000027700";
+    std::string TIDTWN = "0004001000028700";
+    LPCTSTR PluginLink = TEXT("https://github.com/FoofooTheGuy/Miichanic_Plugin/releases/latest/download/Miichanic.3gx");
+    LPCTSTR PluginFile = TEXT("Miichanic.3gx");
+    std::string PluginFileString = "Miichanic.3gx";
+    LPCTSTR BootFirmLink = TEXT("https://github.com/FoofooTheGuy/Miichanic_Plugin/raw/main/boot.firm");
+
     BOOL checked1 = IsDlgButtonChecked(hwnd, 2);
     BOOL checked2 = IsDlgButtonChecked(hwnd, 3);
     BOOL checked3 = IsDlgButtonChecked(hwnd, 4);
@@ -283,7 +294,7 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
             }
             //https://github.com/malortie/Tutorials/blob/master/tutorials/cpp/win32/controls/progressbar/ProgressBar.cpp
             item2 = CreateWindowEx(0, PROGRESS_CLASS, TEXT(""), WS_CHILD | WS_VISIBLE, 15, 320, 450, 30, hwnd, (HMENU)ID_DEFAULTPROGRESSCTRL, ((LPCREATESTRUCT)lParam)->hInstance, NULL);
-            item3 = CreateWindow(TEXT("BUTTON"), TEXT("JPN"), WS_VISIBLE | WS_CHILD | WS_BORDER | BS_CHECKBOX, 20, 30, 185, 35, hwnd, (HMENU)2, ((LPCREATESTRUCT)lParam)->hInstance, NULL);
+            item3 = CreateWindow(TEXT("BUTTON"), TEXT("JPN"), WS_VISIBLE | WS_CHILD | WS_BORDER | BS_CHECKBOX, 20, 30, 185, 35, hwnd, (HMENU)2, ((LPCREATESTRUCT)lParam)->hInstance, NULL);//region buttons, note some out if you dont need some
             item4 = CreateWindow(TEXT("BUTTON"), TEXT("USA"), WS_VISIBLE | WS_CHILD | WS_BORDER | BS_CHECKBOX, 20, 70, 185, 35, hwnd, (HMENU)3, ((LPCREATESTRUCT)lParam)->hInstance, NULL);
             item5 = CreateWindow(TEXT("BUTTON"), TEXT("EUR"), WS_VISIBLE | WS_CHILD | WS_BORDER | BS_CHECKBOX, 20, 110, 185, 35, hwnd, (HMENU)4, ((LPCREATESTRUCT)lParam)->hInstance, NULL);
             item6 = CreateWindow(TEXT("BUTTON"), TEXT("CHN"), WS_VISIBLE | WS_CHILD | WS_BORDER | BS_CHECKBOX, 20, 150, 185, 35, hwnd, (HMENU)5, ((LPCREATESTRUCT)lParam)->hInstance, NULL);
@@ -332,8 +343,8 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
                 }
                 SendMessage(item13, WM_SETTEXT, 0, (LPARAM)TEXT("Starting..."));
                 disableAll();
-                SendMessage(item13, WM_SETTEXT, 0, (LPARAM)TEXT("Downloading Miichanic.3gx..."));
-                hr = URLDownloadToFile(NULL, _T("https://github.com/FoofooTheGuy/Miichanic_Plugin/releases/latest/download/Miichanic.3gx"), _T("Miichanic.3gx"), 0, NULL);
+                SendMessage(item13, WM_SETTEXT, 0, (LPARAM)TEXT("Downloading Miichanic.3gx..."));//you may want to change this
+                hr = URLDownloadToFile(NULL, PluginLink, PluginFile, 0, NULL);
                 switch (hr)//http://www.cplusplus.com/forum/windows/53113/#msg288171
                 {
                 case S_OK: break;
@@ -343,7 +354,7 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
                 }
                 ::SendMessage(item2, PBM_SETPOS, (WPARAM)(INT)25, 0);//make progress bar 25
                 SendMessage(item13, WM_SETTEXT, 0, (LPARAM)TEXT("Downloading boot.firm..."));
-                hr = URLDownloadToFile(NULL, _T("https://github.com/FoofooTheGuy/Miichanic_Plugin/raw/main/boot.firm"), _T("boot.firm"), 0, NULL);
+                hr = URLDownloadToFile(NULL, BootFirmLink, _T("boot.firm"), 0, NULL);
                 switch (hr)//http://www.cplusplus.com/forum/windows/53113/#msg288171
                 {
                 case S_OK: break;
@@ -354,51 +365,51 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
                 ::SendMessage(item2, PBM_SETPOS, (WPARAM)(INT)50, 0);//make progress bar 50
                 SendMessage(item13, WM_SETTEXT, 0, (LPARAM)TEXT("Copying to drive..."));
                 if (Region[0]) {//jpn
-                    std::string MakedirCom("md " + realdir + "luma\\plugins\\0004001000020700");
-                    std::string FinalPath("copy Miichanic.3gx " + realdir + "luma\\plugins\\0004001000020700\\Miichanic.3gx");
+                    std::string MakedirCom("md " + realdir + "luma\\plugins\\" + TIDJPN);
+                    std::string FinalPath("copy " + PluginFileString + " " + realdir + "luma\\plugins\\" + TIDJPN + "\\" + PluginFileString);
                     system(MakedirCom.c_str());
                     system(FinalPath.c_str());
                 }
                 if (Region[1]) {//usa
-                    std::string MakedirCom("md " + realdir + "luma\\plugins\\0004001000021700");
-                    std::string FinalPath("copy Miichanic.3gx " + realdir + "luma\\plugins\\0004001000021700\\Miichanic.3gx");
+                    std::string MakedirCom("md " + realdir + "luma\\plugins\\" + TIDUSA);
+                    std::string FinalPath("copy " + PluginFileString + " " + realdir + "luma\\plugins\\" + TIDUSA + "\\" + PluginFileString);
                     system(MakedirCom.c_str());
                     system(FinalPath.c_str());
                 }
                 if (Region[2]) {//eur
-                    std::string MakedirCom("md " + realdir + "luma\\plugins\\0004001000022700");
-                    std::string FinalPath("copy Miichanic.3gx " + realdir + "luma\\plugins\\0004001000022700\\Miichanic.3gx");
+                    std::string MakedirCom("md " + realdir + "luma\\plugins\\" + TIDEUR);
+                    std::string FinalPath("copy " + PluginFileString + " " + realdir + "luma\\plugins\\" + TIDEUR + "\\" + PluginFileString);
                     system(MakedirCom.c_str());
                     system(FinalPath.c_str());
                 }
                 if (Region[3]) {//chn
-                    std::string MakedirCom("md " + realdir + "luma\\plugins\\0004001000026700");
-                    std::string FinalPath("copy Miichanic.3gx " + realdir + "luma\\plugins\\0004001000026700\\Miichanic.3gx");
+                    std::string MakedirCom("md " + realdir + "luma\\plugins\\" + TIDCHN);
+                    std::string FinalPath("copy " + PluginFileString + " " + realdir + "luma\\plugins\\" + TIDCHN + "\\" + PluginFileString);
                     system(MakedirCom.c_str());
                     system(FinalPath.c_str());
                 }
                 if (Region[4]) {//kor
-                    std::string MakedirCom("md " + realdir + "luma\\plugins\\0004001000027700");
-                    std::string FinalPath("copy Miichanic.3gx " + realdir + "luma\\plugins\\0004001000027700\\Miichanic.3gx");
+                    std::string MakedirCom("md " + realdir + "luma\\plugins\\" + TIDKOR);
+                    std::string FinalPath("copy " + PluginFileString + " " + realdir + "luma\\plugins\\" + TIDKOR + "\\" + PluginFileString);
                     system(MakedirCom.c_str());
                     system(FinalPath.c_str());
                 }
                 if (Region[5]) {//twn
-                    std::string MakedirCom("md " + realdir + "luma\\plugins\\0004001000028700");
-                    std::string FinalPath("copy Miichanic.3gx " + realdir + "luma\\plugins\\0004001000028700\\Miichanic.3gx");
+                    std::string MakedirCom("md " + realdir + "luma\\plugins\\" + TIDTWN);
+                    std::string FinalPath("copy " + PluginFileString + " " + realdir + "luma\\plugins\\" + TIDTWN + "\\" + PluginFileString);
                     system(MakedirCom.c_str());
                     system(FinalPath.c_str());
                 }
                 ::SendMessage(item2, PBM_SETPOS, (WPARAM)(INT)75, 0);//make progress bar 75
                 std::string FinalPath("copy boot.firm " + realdir);
                 system(FinalPath.c_str());
-                remove("Miichanic.3gx");//delete downloaded files after copying
+                remove(PluginFileString.c_str());//delete downloaded files after copying
                 remove("boot.firm");
                 ::SendMessage(item2, PBM_SETPOS, (WPARAM)(INT)100, 0);//make progress bar 100
                 SendMessage(item13, WM_SETTEXT, 0, (LPARAM)TEXT("Installation complete!"));
                     choice = ::MessageBox(hwnd, TEXT("Installation complete! Would you like to continue to the rest of the guide?"), TEXT("Complete!"), MB_YESNO | MB_ICONASTERISK);
                     switch (choice) {
-                    case IDYES: system("start \"\" https://github.com/FoofooTheGuy/Miichanic_Plugin#method-1-assisted-installation-using-a-windows-pc");
+                    case IDYES: system("start \"\" https://github.com/FoofooTheGuy/Miichanic_Plugin#method-1-assisted-installation-using-a-windows-pc");//change this as well
                         break;
                     default:
                         break;
