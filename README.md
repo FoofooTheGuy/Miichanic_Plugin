@@ -125,3 +125,7 @@ CHN/TWN menu on the CHN version and on the TWN version:
 KOR menu:
 
 ![KOR](https://user-images.githubusercontent.com/32585652/130696091-d48ac080-61a7-4f96-afb0-2d9fbd8988c6.png)
+
+# Building
+
+install [this](https://mega.nz/file/bzRU1BaA#rwaZNp-_iki1dEwz-rAWrlG67TAg5nW5NxmQSBgBUnE) version of devkitpro and then run [build.bat](https://github.com/FoofooTheGuy/Miichanic_Plugin/blob/main/build.bat)
