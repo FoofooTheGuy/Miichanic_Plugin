@@ -5,6 +5,7 @@
 
 namespace CTRPluginFramework
 {
+	Keyboard *kb = new Keyboard("Enter ID:");
 	Keyboard *optKb = new Keyboard("Choose option:");
 	Keyboard *deloptKb = new Keyboard("Are you sure you want to delete this Mii?");
 
@@ -92,7 +93,7 @@ bool ConvertString(u32 address, const char* input, size_t size, StringFormat for
         settings.MainTextColor = Color::Black;
         settings.WindowTitleColor = Color::Black;
         settings.MenuSelectedItemColor = Color::Black;
-        settings.MenuUnselectedItemColor = Color::Black; 
+        settings.MenuUnselectedItemColor = Color::Black;
         settings.Keyboard.Background = Color::White;
         settings.Keyboard.KeyBackground = Color::DarkGrey;
         settings.Keyboard.KeyBackgroundPressed = Color::DimGrey;
@@ -858,6 +859,13 @@ bool ConvertString(u32 address, const char* input, size_t size, StringFormat for
 				MessageBox(Miiname << " is now one of your own Miis!\n(Reload and save to make changes)")();
 			}
 			if (Choiche == 10) {//swap
+				for (int i = 0; i < 8; i+=4)//take ownership of mii to swap to
+				{
+					if (Process::Read32(DATA_ADDR + 4 + i, val32))
+					{
+						Process::Write32((0x5C * val) + (DATA_ADDR + 4 + i), val32);
+					}
+				}
 				for (int i = 0; i < 92; i+=4)
 				{
 					if(Process::Read32((0x5C * val) + (DATA_ADDR + i), val32))
