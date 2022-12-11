@@ -1,5 +1,5 @@
 <p align="center">
-<img width="708" height="290" src="https://user-images.githubusercontent.com/32585652/149023595-aa0d8153-a942-4c2b-947d-a7214ef68e21.png">
+<img width="708" height="-1" src="https://user-images.githubusercontent.com/32585652/149023595-aa0d8153-a942-4c2b-947d-a7214ef68e21.png">
 </p>
 
 # Miichanic's Tool Box
