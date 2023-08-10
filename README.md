@@ -22,7 +22,7 @@ Method 1 (Assisted installation using a Windows PC):
 Method 2 (Manual installation):
 ---
 1. Turn off your console and put your SD card into your computer
-2. Download the boot.firm file for [Luma3DS 3GX Loader Edition](https://github.com/Nanquitas/Luma3DS/releases/latest) and
+2. Download the latest boot.firm file for [Luma3DS](https://github.com/LumaTeam/Luma3DS/releases/latest) and
 replace the boot.firm on your SD card root with that one.
 3. Create a folder called "plugins" (without quotes) in the luma folder that is on your SD card root (SD:/luma/plugins/)
 4. Create a folder corresponding to your game title ID in the plugins folder:
