@@ -1,3 +1,10 @@
+> [!caution]
+> This plugin is very poorly programmed and will have to be completely rewritten to achieve stability.
+> Please read the [issues](https://github.com/FoofooTheGuy/Miichanic_Plugin/issues) to understand the risks in using this unmaintained piece of DOODOO.
+> If possible, please do not even attempt to use it.
+> There is no estimate on when the rewrite will begin.
+
+
 <p align="center">
 <img width="708" height="-1" src="https://user-images.githubusercontent.com/32585652/149023595-aa0d8153-a942-4c2b-947d-a7214ef68e21.png">
 </p>
@@ -5,10 +12,6 @@
 # Miichanic's Tool Box
 A Luma3DS plugin for the Title Mii Maker that uses CTRPF 0.7.0 and supports every region.
 
-> [!caution]
-> This plugin is very poorly programmed and will have to be completely rewritten to achieve stability.
-> Please read the [issues](https://github.com/FoofooTheGuy/Miichanic_Plugin/issues) to understand the risks in using this unmaintained piece of DOODOO.
-> There is no estimate on when the rewrite will begin.
 
 # Installation guide:
 (You will need to first install Custom Firmware to use this plugin)
